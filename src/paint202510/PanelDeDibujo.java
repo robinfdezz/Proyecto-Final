@@ -1,60 +1,67 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package paint202510;
 
-import figuras.DibujoLibre;
-import figuras.Linea;
+import figuras.*;
 import java.awt.Color;
 import java.awt.Graphics;
+import java.awt.Point;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.util.ArrayList;
 import javax.swing.JPanel;
-import figuras.Figura;
-import java.awt.Point;
+import java.util.ArrayList;
+import java.util.List;
 
-/**
- *
- * @author josearielpereyra
- */
 public class PanelDeDibujo extends JPanel {
-    ArrayList<Figura> figuras = new ArrayList<>();
-    Figura figuraActual;
-    BarraDeHerramientas barraDeHerramientas = new BarraDeHerramientas();
+    private Figura figuraActual;
+    private List<Figura> figuras = new ArrayList<>();
+    BarraDeHerramientas barraDeHerramientas;
+    private Color colorActual = Color.BLACK;
+    private boolean rellenoActual = false;
 
-    public PanelDeDibujo() {
-        addMouseListener(new MouseAdapter(){
+    public PanelDeDibujo(BarraDeHerramientas barraDeHerramientas) {
+        this.barraDeHerramientas = barraDeHerramientas;
+        configurarEventosRaton();
+        setBackground(Color.WHITE);
+    }
+
+    private void configurarEventosRaton() {
+        addMouseListener(new MouseAdapter() {
             @Override
             public void mousePressed(MouseEvent e) {
                 figuraActual = obtenerFiguraADibujar(e.getPoint());
+                figuraActual.setColorDePrimerPlano(colorActual);
+                figuraActual.setRelleno(rellenoActual);
                 figuras.add(figuraActual);
                 repaint();
             }
+
+            @Override
+            public void mouseReleased(MouseEvent e) {
+                figuraActual = null;
+            }
         });
-        addMouseMotionListener(new MouseAdapter(){
+
+        addMouseMotionListener(new MouseAdapter() {
             @Override
             public void mouseDragged(MouseEvent e) {
-                figuraActual.actualizar(e.getPoint());
-                repaint();
+                if (barraDeHerramientas.btnBorrador.isSelected()) { //detecta si esta activo el borrador
+                    figuraActual = new Borrador(e.getPoint());// crea un borador
+                    figuras.add(figuraActual); // se agrega a la lista de figuras
+                } else if (figuraActual != null) {
+                    figuraActual.actualizar(e.getPoint()); // actualiza la figura
+                }
+                repaint();// redibuja el panel para ver los cambios
             }
         });
     }
 
     private Figura obtenerFiguraADibujar(Point punto) {
-        if(barraDeHerramientas.btnLinea.isSelected()) {
+        if (barraDeHerramientas.btnLinea.isSelected()) {
             return new Linea(punto);
-        }
-//        else if(barraDeHerramientas.btnRectangulo.isSelected()){
-//            //agregar codigo para el rectangulo
-//            return new Rectangulo(punto);
-//        }
-//        else if(barraDeHerramientas.btnBorrador.isSelected()){
-//            //agregar codigo para el borrador
-//            return new Borrador(punto);
-//        }
-        else {
+        } else if (barraDeHerramientas.btnRectangulo.isSelected()) {
+            return new Rectangulo(punto);
+        } else if (barraDeHerramientas.btnBorrador.isSelected()) {
+            return new Borrador(punto);
+        } else {
             return new DibujoLibre(punto);
         }
     }
@@ -62,11 +69,29 @@ public class PanelDeDibujo extends JPanel {
     @Override
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);
-        setBackground(Color.WHITE);
 
-        for(Figura figura : figuras) {
+        for (Figura figura : figuras) {
             figura.dibujar(g);
         }
     }
-    
+
+    public void limpiarPanel() {
+        figuras.clear();
+        repaint();
+    }
+
+    public void setColorActual(Color color) {
+        this.colorActual = color;
+    }
+
+    public void setRellenoActual(boolean relleno) {
+        this.rellenoActual = relleno;
+    }
+
+    public void deshacer() {
+        if (!figuras.isEmpty()) {
+            figuras.remove(figuras.size() - 1);
+            repaint();
+        }
+    }
 }
