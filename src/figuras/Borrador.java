@@ -15,8 +15,9 @@ public class Borrador extends Figura {
 
     @Override
     public void dibujar(Graphics g) {
-        g.setColor(colorDePrimerPlano);
-        g.fillRect(centro.x - tamano / 2, centro.y - tamano / 2, tamano, tamano);
+        g.setColor(Color.WHITE);
+//        g.fillRect(centro.x - tamano / 2, centro.y - tamano / 2, tamano, tamano);
+        g.fillOval(centro.x - tamano / 2, centro.y - tamano / 2, tamano, tamano);
     }
 
     @Override

@@ -61,6 +61,10 @@ public class PanelDeDibujo extends JPanel {
             return new Rectangulo(punto);
         } else if (barraDeHerramientas.btnBorrador.isSelected()) {
             return new Borrador(punto);
+        } else if (barraDeHerramientas.btnOvalo.isSelected()) {
+            return new Ovalo(punto);
+        } else if (barraDeHerramientas.btnCirculo.isSelected()) {
+            return new Circulo(punto);
         } else {
             return new DibujoLibre(punto);
         }

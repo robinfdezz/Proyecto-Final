@@ -21,17 +21,23 @@ public class BarraDeHerramientas extends JToolBar{
     protected JToggleButton btnLapiz;
     protected JToggleButton btnLinea;
     protected JToggleButton btnRectangulo;
+    protected JToggleButton btnOvalo;
+    protected JToggleButton btnCirculo;
 
     public BarraDeHerramientas() {
         btnLapiz = new JToggleButton("Lapiz");
         btnLinea = new JToggleButton("Linea");
         btnRectangulo = new JToggleButton("Rectangulo");
+        btnOvalo = new JToggleButton("Óvalo");
+        btnCirculo = new JToggleButton("Círculo");
         btnBorrador = new JToggleButton("Borrador");
 
         //formatear y agregar a la barra de herramientas los componentes
         formatearYAgregar(btnLapiz, "Dibujo Libre");
         formatearYAgregar(btnLinea, "Linea");
         formatearYAgregar(btnRectangulo, "Rectangulo");
+        formatearYAgregar(btnOvalo, "Óvalo");
+        formatearYAgregar(btnCirculo, "Círculo");
         formatearYAgregar(btnBorrador, "Borrador");
 
         ButtonGroup grupoBotones = new ButtonGroup();
