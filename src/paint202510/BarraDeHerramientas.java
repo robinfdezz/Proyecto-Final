@@ -2,6 +2,7 @@ package paint202510;
 
 
 import java.awt.Component;
+import java.awt.Font;
 import javax.swing.ButtonGroup;
 import javax.swing.JToolBar;
 import javax.swing.JToggleButton;
@@ -25,6 +26,7 @@ public class BarraDeHerramientas extends JToolBar{
     protected JToggleButton btnCirculo;
 
     public BarraDeHerramientas() {
+        setOrientation(JToolBar.VERTICAL); // Esto orienta la barra en vertical
         btnLapiz = new JToggleButton("Lapiz");
         btnLinea = new JToggleButton("Linea");
         btnRectangulo = new JToggleButton("Rectangulo");
@@ -50,6 +52,7 @@ public class BarraDeHerramientas extends JToolBar{
         boton.setFocusable(false);
         boton.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
         boton.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
+        boton.setFont(new Font("Arial", Font.BOLD, 14));
         boton.setToolTipText(String.format("<html><strong>%s</strong><p>Selecione para dibujar %s</p></html>", texto, texto));
         add(boton);
     }

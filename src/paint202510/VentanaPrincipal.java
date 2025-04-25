@@ -9,7 +9,7 @@ public class VentanaPrincipal extends javax.swing.JFrame {
 
     public VentanaPrincipal() {
         initComponents();
-        setSize(500, 400);
+        setSize(1000, 500);
         setLocationRelativeTo(null);
 
         // Inicializar primero la barra de herramientas
@@ -20,7 +20,7 @@ public class VentanaPrincipal extends javax.swing.JFrame {
 
         // Configurar el layout y añadir componentes
         getContentPane().setLayout(new BorderLayout());
-        getContentPane().add(barraDeHerramientas, BorderLayout.NORTH);
+        getContentPane().add(barraDeHerramientas, BorderLayout.WEST);
         getContentPane().add(lienzo, BorderLayout.CENTER);
     }
 
@@ -39,7 +39,7 @@ public class VentanaPrincipal extends javax.swing.JFrame {
                 }
             }
         } catch (ClassNotFoundException | InstantiationException |
-                 IllegalAccessException | javax.swing.UnsupportedLookAndFeelException ex) {
+                IllegalAccessException | javax.swing.UnsupportedLookAndFeelException ex) {
             java.util.logging.Logger.getLogger(VentanaPrincipal.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
 

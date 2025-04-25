@@ -13,33 +13,33 @@ import java.awt.Graphics;
 import java.awt.Point;
 
 public class Circulo extends Figura {
-    private Point puntoInicial;
-    private Point puntoFinal;
+    private Point centro;
+    private Point puntoActual;
 
-    public Circulo(Point puntoInicial) {
-        this.puntoInicial = puntoInicial;
-        this.puntoFinal = puntoInicial;
+    public Circulo(Point centro) {
+        this.centro = centro;
+        this.puntoActual = centro;
     }
 
     @Override
     public void actualizar(Point puntoActual) {
-        this.puntoFinal = puntoActual;
+        this.puntoActual = puntoActual;
     }
 
     @Override
     public void dibujar(Graphics g) {
         g.setColor(colorDePrimerPlano);
 
-        int x = Math.min(puntoInicial.x, puntoFinal.x);
-        int y = Math.min(puntoInicial.y, puntoFinal.y);
-        int ancho = Math.abs(puntoFinal.x - puntoInicial.x);
-        int alto = Math.abs(puntoFinal.y - puntoInicial.y);
-        int lado = Math.min(ancho, alto);
+        int radio = (int) centro.distance(puntoActual);
+
+        int x = centro.x - radio;
+        int y = centro.y - radio;
+        int diametro = radio * 2;
 
         if (relleno) {
-            g.fillOval(x, y, lado, lado);
+            g.fillOval(x, y, diametro, diametro);
         } else {
-            g.drawOval(x, y, lado, lado);
+            g.drawOval(x, y, diametro, diametro);
         }
     }
 }
