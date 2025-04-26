@@ -25,7 +25,6 @@ public class BarraDeHerramientas extends JToolBar{
     protected JToggleButton btnOvalo;
     protected JToggleButton btnCirculo;
     protected JToggleButton btnGuardar;
-    
 
 
     public BarraDeHerramientas() {
@@ -45,6 +44,7 @@ public class BarraDeHerramientas extends JToolBar{
         // formatearYAgregar(btnOvalo, "Óvalo");
         // formatearYAgregar(btnCirculo, "Círculo");
         // formatearYAgregar(btnBorrador, "Borrador");
+        
 
         formatearYAgregar(btnLapiz, "lapiz.png", "Dibujo Libre");
         formatearYAgregar(btnLinea, "linea.png", "Línea");
@@ -53,9 +53,6 @@ public class BarraDeHerramientas extends JToolBar{
         formatearYAgregar(btnCirculo, "circulo.png", "Círculo");
         formatearYAgregar(btnBorrador, "borrador.png", "Borrador");
         formatearYAgregar(btnGuardar, "guardar.png", "Guardar Imagen");
-
-        
-
 
         // ButtonGroup grupoBotones = new ButtonGroup();
         // for(Component boton : this.getComponents() ){
@@ -84,7 +81,7 @@ public class BarraDeHerramientas extends JToolBar{
         boton.setToolTipText("Seleccione: " + tooltip);
         boton.setText(null); // No mostrar texto
     
-        // Cargar el ícono desde la carpeta /iconos
+        // Cargar el ícono desde la carpeta iconos
         java.net.URL ruta = getClass().getResource("/iconos/" + nombreIcono);
         if (ruta != null) {
             boton.setIcon(new javax.swing.ImageIcon(ruta));

@@ -92,7 +92,7 @@ public class PanelDeDibujo extends JPanel {
     private void guardarImagen() {
         BufferedImage imagen = new BufferedImage(getWidth(), getHeight(), BufferedImage.TYPE_INT_RGB);
         Graphics g = imagen.getGraphics();
-        paint(g); // Usamos paint para dibujar todo lo que esté en el panel
+        paint(g);
         g.dispose();
     
         JFileChooser selector = new JFileChooser();
