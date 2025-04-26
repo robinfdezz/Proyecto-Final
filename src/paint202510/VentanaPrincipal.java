@@ -20,7 +20,7 @@ public class VentanaPrincipal extends javax.swing.JFrame {
 
         // Configurar el layout y añadir componentes
         getContentPane().setLayout(new BorderLayout());
-        getContentPane().add(barraDeHerramientas, BorderLayout.WEST);
+        getContentPane().add(barraDeHerramientas, BorderLayout.EAST);
         getContentPane().add(lienzo, BorderLayout.CENTER);
     }
 

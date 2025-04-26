@@ -9,6 +9,12 @@ import java.awt.event.MouseEvent;
 import javax.swing.JPanel;
 import java.util.ArrayList;
 import java.util.List;
+//? /////////////////
+import javax.imageio.ImageIO;
+import java.awt.image.BufferedImage;
+import java.io.File;
+import javax.swing.JFileChooser;
+import javax.swing.JOptionPane;
 
 public class PanelDeDibujo extends JPanel {
     private Figura figuraActual;
@@ -26,7 +32,20 @@ public class PanelDeDibujo extends JPanel {
     private void configurarEventosRaton() {
         addMouseListener(new MouseAdapter() {
             @Override
+            // public void mousePressed(MouseEvent e) {
+            //     figuraActual = obtenerFiguraADibujar(e.getPoint());
+            //     figuraActual.setColorDePrimerPlano(colorActual);
+            //     figuraActual.setRelleno(rellenoActual);
+            //     figuras.add(figuraActual);
+            //     repaint();
+            // }
             public void mousePressed(MouseEvent e) {
+                if (barraDeHerramientas.btnGuardar.isSelected()) {
+                    guardarImagen(); // Guardar la imagen
+                    barraDeHerramientas.btnGuardar.setSelected(false); // Desactivarlo después
+                    return; // No seguir dibujando
+                }
+            
                 figuraActual = obtenerFiguraADibujar(e.getPoint());
                 figuraActual.setColorDePrimerPlano(colorActual);
                 figuraActual.setRelleno(rellenoActual);
@@ -69,6 +88,28 @@ public class PanelDeDibujo extends JPanel {
             return new DibujoLibre(punto);
         }
     }
+//? //////////////////////////
+    private void guardarImagen() {
+        BufferedImage imagen = new BufferedImage(getWidth(), getHeight(), BufferedImage.TYPE_INT_RGB);
+        Graphics g = imagen.getGraphics();
+        paint(g); // Usamos paint para dibujar todo lo que esté en el panel
+        g.dispose();
+    
+        JFileChooser selector = new JFileChooser();
+        selector.setDialogTitle("Guardar Imagen");
+        
+        int seleccion = selector.showSaveDialog(this);
+        if (seleccion == JFileChooser.APPROVE_OPTION) {
+            File archivo = selector.getSelectedFile();
+            try {
+                ImageIO.write(imagen, "png", new File(archivo.getAbsolutePath() + ".png"));
+                JOptionPane.showMessageDialog(this, "Imagen guardada exitosamente.");
+            } catch (Exception ex) {
+                JOptionPane.showMessageDialog(this, "Error al guardar: " + ex.getMessage());
+            }
+        }
+    }
+    
 
     @Override
     protected void paintComponent(Graphics g) {
