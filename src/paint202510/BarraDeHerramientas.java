@@ -24,7 +24,10 @@ public class BarraDeHerramientas extends JToolBar{
     protected JToggleButton btnRectangulo;
     protected JToggleButton btnOvalo;
     protected JToggleButton btnCirculo;
+    protected JToggleButton btnCuadrado;  // Nuevo botón para Cuadrado
+    protected JToggleButton btnTriangulo; // Nuevo botón para Triángulo
     protected JToggleButton btnGuardar;
+
 
 
     public BarraDeHerramientas() {
@@ -35,6 +38,8 @@ public class BarraDeHerramientas extends JToolBar{
         btnOvalo = new JToggleButton("Óvalo");
         btnCirculo = new JToggleButton("Círculo");
         btnBorrador = new JToggleButton("Borrador");
+        btnCuadrado = new JToggleButton("Cuadrado"); // Inicializar el botón de Cuadrado
+        btnTriangulo = new JToggleButton("Triángulo"); // Inicializar el botón de Triángulo
         btnGuardar = new JToggleButton("Guardar");
 
         //formatear y agregar a la barra de herramientas los componentes
@@ -52,6 +57,8 @@ public class BarraDeHerramientas extends JToolBar{
         formatearYAgregar(btnOvalo, "ovalo.png", "Óvalo");
         formatearYAgregar(btnCirculo, "circulo.png", "Círculo");
         formatearYAgregar(btnBorrador, "borrador.png", "Borrador");
+        formatearYAgregar(btnCuadrado, "cuadrado.png", "Cuadrado"); // Añadir botón de Cuadrado a la barra
+        formatearYAgregar(btnTriangulo, "triangulo.png", "Triángulo"); // Añadir botón de Triángulo a la barra
         formatearYAgregar(btnGuardar, "guardar.png", "Guardar Imagen");
 
         // ButtonGroup grupoBotones = new ButtonGroup();

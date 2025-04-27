@@ -84,6 +84,10 @@ public class PanelDeDibujo extends JPanel {
             return new Ovalo(punto);
         } else if (barraDeHerramientas.btnCirculo.isSelected()) {
             return new Circulo(punto);
+        } else if (barraDeHerramientas.btnCuadrado.isSelected()) { // Añadido Cuadrado
+            return new Cuadrado(punto);
+        } else if (barraDeHerramientas.btnTriangulo.isSelected()) { // Añadido Triangulo
+            return new Triangulo(punto);
         } else {
             return new DibujoLibre(punto);
         }
