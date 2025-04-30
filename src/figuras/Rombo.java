@@ -6,17 +6,20 @@ package figuras;
 
 /**
  *
- * @author robin
+ * @author marco
  */
+
+
 import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Point;
+import java.awt.Polygon;
 
-public class Circulo extends Figura {
+public class Rombo extends Figura {
     private Point centro;
     private Point puntoActual;
 
-    public Circulo(Point centro) {
+    public Rombo(Point centro) {
         this.centro = centro;
         this.puntoActual = centro;
     }
@@ -30,16 +33,30 @@ public class Circulo extends Figura {
     public void dibujar(Graphics g) {
         g.setColor(colorDePrimerPlano);
 
-        int radio = (int) centro.distance(puntoActual);
+        int dx = puntoActual.x - centro.x;
+        int dy = puntoActual.y - centro.y;
 
-        int x = centro.x - radio;
-        int y = centro.y - radio;
-        int diametro = radio * 2;
+        int[] xPoints = {
+            centro.x,
+            centro.x + dx,
+            centro.x,
+            centro.x - dx
+        };
+
+        int[] yPoints = {
+            centro.y - dy,
+            centro.y,
+            centro.y + dy,
+            centro.y
+        };
+
+        Polygon rombo = new Polygon(xPoints, yPoints, 4);
 
         if (relleno) {
-            g.fillOval(x, y, diametro, diametro);
+            g.fillPolygon(rombo);
         } else {
-            g.drawOval(x, y, diametro, diametro);
+            g.drawPolygon(rombo);
         }
     }
 }
+

@@ -88,7 +88,11 @@ public class PanelDeDibujo extends JPanel {
             return new Cuadrado(punto);
         } else if (barraDeHerramientas.btnTriangulo.isSelected()) { // Añadido Triangulo
             return new Triangulo(punto);
-        } else {
+        }else if(barraDeHerramientas.btnPentagono.isSelected()){
+                return new Pentagono(punto);
+        }else if (barraDeHerramientas.btnRombo.isSelected()){
+                return new Rombo(punto);
+        }else  {
             return new DibujoLibre(punto);
         }
     }

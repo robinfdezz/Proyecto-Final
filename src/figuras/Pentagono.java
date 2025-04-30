@@ -6,17 +6,20 @@ package figuras;
 
 /**
  *
- * @author robin
+ * @author marco
  */
+
+
 import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Point;
+import java.awt.Polygon;
 
-public class Circulo extends Figura {
+public class Pentagono extends Figura {
     private Point centro;
     private Point puntoActual;
 
-    public Circulo(Point centro) {
+    public Pentagono(Point centro) {
         this.centro = centro;
         this.puntoActual = centro;
     }
@@ -31,15 +34,21 @@ public class Circulo extends Figura {
         g.setColor(colorDePrimerPlano);
 
         int radio = (int) centro.distance(puntoActual);
+        int[] xPoints = new int[5];
+        int[] yPoints = new int[5];
 
-        int x = centro.x - radio;
-        int y = centro.y - radio;
-        int diametro = radio * 2;
+        for (int i = 0; i < 5; i++) {
+            double angle = Math.toRadians(-90 + i * 72); // Empieza hacia arriba
+            xPoints[i] = centro.x + (int) (radio * Math.cos(angle));
+            yPoints[i] = centro.y + (int) (radio * Math.sin(angle));
+        }
+
+        Polygon pentagono = new Polygon(xPoints, yPoints, 5);
 
         if (relleno) {
-            g.fillOval(x, y, diametro, diametro);
+            g.fillPolygon(pentagono);
         } else {
-            g.drawOval(x, y, diametro, diametro);
+            g.drawPolygon(pentagono);
         }
     }
 }
