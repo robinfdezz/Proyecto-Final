@@ -29,6 +29,8 @@ public class BarraDeHerramientas extends JToolBar{
     protected JToggleButton btnGuardar;
     protected JToggleButton btnPentagono; 
     protected JToggleButton btnRombo;
+    protected JToggleButton btnHeptagono;
+    protected JToggleButton btnOctagono;
 
 
 
@@ -45,6 +47,8 @@ public class BarraDeHerramientas extends JToolBar{
         btnGuardar = new JToggleButton("Guardar");
         btnPentagono = new JToggleButton("Pentágono");
         btnRombo = new JToggleButton("Rombo");
+        btnHeptagono = new JToggleButton("Heptagono");
+        btnOctagono = new JToggleButton("Octagono");
 
         
 
@@ -68,6 +72,8 @@ public class BarraDeHerramientas extends JToolBar{
         formatearYAgregar(btnGuardar, "guardar.png", "Guardar Imagen");
         formatearYAgregar(btnPentagono, "pentagono.png", "Pentágono");
         formatearYAgregar(btnRombo, "rombo.png", "Rombo");
+        formatearYAgregar(btnHeptagono, "heptagono.png", "Heptagono");
+        formatearYAgregar(btnOctagono, "octagono.png", "Heptagono");
 
         // ButtonGroup grupoBotones = new ButtonGroup();
         // for(Component boton : this.getComponents() ){
