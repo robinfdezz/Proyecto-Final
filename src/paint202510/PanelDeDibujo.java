@@ -96,7 +96,11 @@ public class PanelDeDibujo extends JPanel {
                 return new Heptagono(punto);
         }else if (barraDeHerramientas.btnOctagono.isSelected()){
                 return new Octagono(punto);
-        }else  {
+        }else if (barraDeHerramientas.btnEstrella.isSelected()){
+            return new Estrella(punto);
+        }else if (barraDeHerramientas.btnFlecha.isSelected()){
+        return new Flecha(punto);
+         }else  {
             return new DibujoLibre(punto);
         }
     }
