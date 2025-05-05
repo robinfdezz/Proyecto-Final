@@ -29,7 +29,7 @@ public class BarraDeHerramientas extends JToolBar {
     protected JToggleButton btnFlecha;
 
     public BarraDeHerramientas() {
-        setOrientation(JToolBar.VERTICAL); // Orienta la barra en vertical
+    setOrientation(JToolBar.HORIZONTAL);
 
         // Inicialización de los botones
         btnLapiz = new JToggleButton("Lapiz");
@@ -49,21 +49,21 @@ public class BarraDeHerramientas extends JToolBar {
         btnFlecha = new JToggleButton("Flecha");
 
         // Agregar botones a la barra de herramientas
+        formatearYAgregar(btnGuardar, "guardar.png", "Guardar Imagen");
         formatearYAgregar(btnLapiz, "lapiz.png", "Dibujo Libre");
         formatearYAgregar(btnLinea, "linea.png", "Línea");
-        formatearYAgregar(btnRectangulo, "rectangulo.png", "Rectángulo");
         formatearYAgregar(btnOvalo, "ovalo.png", "Óvalo");
         formatearYAgregar(btnCirculo, "circulo.png", "Círculo");
-        formatearYAgregar(btnBorrador, "borrador.png", "Borrador");
         formatearYAgregar(btnCuadrado, "cuadrado.png", "Cuadrado");
+        formatearYAgregar(btnRectangulo, "rectangulo.png", "Rectángulo");
         formatearYAgregar(btnTriangulo, "triangulo.png", "Triángulo");
-        formatearYAgregar(btnGuardar, "guardar.png", "Guardar Imagen");
-        formatearYAgregar(btnPentagono, "pentagono.png", "Pentágono");
         formatearYAgregar(btnRombo, "rombo.png", "Rombo");
+        formatearYAgregar(btnPentagono, "pentagono.png", "Pentágono");
         formatearYAgregar(btnHeptagono, "heptagono.png", "Heptagono");
         formatearYAgregar(btnOctagono, "octagono.png", "Octagono");
         formatearYAgregar(btnEstrella, "estrella.png", "Estrella");
         formatearYAgregar(btnFlecha, "flecha.png", "Flecha");
+        formatearYAgregar(btnBorrador, "borrador.png", "Borrador");
 
         // Crear un grupo de botones para que solo uno esté seleccionado a la vez
         ButtonGroup grupoBotones = new ButtonGroup();
