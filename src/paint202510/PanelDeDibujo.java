@@ -99,6 +99,8 @@ public class PanelDeDibujo extends JPanel {
             return new Trapecio(punto);
         } else if(barraDeHerramientas.btnSemicirculo.isSelected()){ // agragar semicirculo
             return new Semicirculo(punto);
+        } else if(barraDeHerramientas.btnRing.isSelected()){ // agragar Ring
+            return new Ring(punto);
         }
         else  {
             return new DibujoLibre(punto);

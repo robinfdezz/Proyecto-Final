@@ -30,6 +30,7 @@ public class BarraDeHerramientas extends JToolBar {
     protected JToggleButton btnCorazon;
     protected JToggleButton btnTrapecio;
     protected JToggleButton btnSemicirculo;
+    protected JToggleButton btnRing;
 
     public BarraDeHerramientas() {
     setOrientation(JToolBar.HORIZONTAL);
@@ -52,8 +53,8 @@ public class BarraDeHerramientas extends JToolBar {
         btnFlecha = new JToggleButton("Flecha");
         btnCorazon = new JToggleButton("corazon");
         btnTrapecio = new JToggleButton("Trapecio");
-         btnSemicirculo = new JToggleButton("Semicirculo");
-
+        btnSemicirculo = new JToggleButton("Semicirculo");
+        btnRing = new JToggleButton("Ring");
 
         // Agregar botones a la barra de herramientas
         formatearYAgregar(btnGuardar, "guardar.png", "Guardar Imagen");
@@ -73,6 +74,7 @@ public class BarraDeHerramientas extends JToolBar {
         formatearYAgregar(btnCorazon, "corazon.png", "Corazon");
         formatearYAgregar(btnTrapecio, "trapecio.png", "Trapecio");
         formatearYAgregar(btnSemicirculo, "semicirculo.png", "Semicirculo");
+        formatearYAgregar(btnRing, "ring.png", "Ring");
         formatearYAgregar(btnBorrador, "borrador.png", "Borrador");
 
         // Crear un grupo de botones para que solo uno esté seleccionado a la vez
