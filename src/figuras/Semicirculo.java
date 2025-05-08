@@ -12,47 +12,33 @@ import java.awt.Point;
  * @author ebenezer
  */
 public class Semicirculo extends Figura {
-    private double radio;
+     private Point centro;
+    private Point puntoActual;
 
-    
-    public Semicirculo(double radio) {
-        this.radio = radio;
-    }
-
-    
-    public double getRadio() {
-        return radio;
-    }
-
-    public void setRadio(double radio) {
-        this.radio = radio;
-    }
-
-    
-    public double calcularArea() {
-        return (Math.PI * radio * radio) / 2;
-    }
-
-    
-    public double calcularPerimetro() {
-                return Math.PI * radio;
-    }
-
-    public void mostrarInfo() {
-        System.out.println("Semi-Círculo con radio: " + radio);
-        System.out.println("Área: " + calcularArea());
-        System.out.println("Perímetro (curva): " + calcularPerimetro());
-    }
-
-    @Override
-    public void dibujar(Graphics g) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+    public Semicirculo(Point centro) {
+        this.centro = centro;
+        this.puntoActual = centro;
     }
 
     @Override
     public void actualizar(Point puntoActual) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+        this.puntoActual = puntoActual;
     }
-   
+
+    @Override
+    public void dibujar(Graphics g) {
+        g.setColor(colorDePrimerPlano);
+
+        int radio = (int) centro.distance(puntoActual);
+        int x = centro.x - radio;
+        int y = centro.y - radio;
+        int diametro = radio * 2;
+
+        // Dibuja un semicírculo (parte superior)
+        if (relleno) {
+            g.fillArc(x, y, diametro, diametro, 0, 180);
+        } else {
+            g.drawArc(x, y, diametro, diametro, 0, 180);
+        }
+    }
 }
-    

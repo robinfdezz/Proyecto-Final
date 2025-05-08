@@ -97,6 +97,8 @@ public class PanelDeDibujo extends JPanel {
             return new Corazon(punto);
         } else if (barraDeHerramientas.btnTrapecio.isSelected()){ // Añadido Trapecio
             return new Trapecio(punto);
+        } else if(barraDeHerramientas.btnSemicirculo.isSelected()){ // agragar semicirculo
+            return new Semicirculo(punto);
         }
         else  {
             return new DibujoLibre(punto);
