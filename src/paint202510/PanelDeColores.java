@@ -189,7 +189,7 @@ public class PanelDeColores extends JPanel {
 
         // Añadir componentes al panel.
         add(botonColorBorde);
-        add(botonColorRelleno);
+        formatearYAgregar(botonColorRelleno, "relleno.png", "Cubeta de pintura", false);
         add(checkRellenar);
         formatearYAgregar(botonInformacion, "informacion.png", "Infotmacion", false);
         formatearYAgregar(botonCargar, "subirImagen.png", "Cargar Imagen", false);

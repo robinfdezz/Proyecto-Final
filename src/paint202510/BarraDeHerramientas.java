@@ -43,6 +43,7 @@ public class BarraDeHerramientas extends JToolBar{
     protected JToggleButton btnRing;
     protected JToggleButton btnSeleccionar; // Botón para la herramienta de selección
 
+
     // JButtons para acciones
     protected JButton btnGuardar;
     protected JButton btnDeshacer;
