@@ -1,9 +1,7 @@
 package figuras;
 
-import java.awt.Color;
-import java.awt.Graphics;
-import java.awt.Point;
-import java.awt.Polygon;
+import java.awt.*;
+import java.util.ArrayList;
 
 /**
  * Representa una forma de heptágono (polígono de 7 lados).
@@ -11,8 +9,6 @@ import java.awt.Polygon;
  * autor carol
  */
 public class Heptagono extends Figura {
-    private Point centroGeometrico; // El centro geométrico del heptágono.
-    private Point verticeReferencia; // Un punto de referencia para determinar el tamaño y la orientación.
     private int numeroLados = 7; // Constante para el número de lados del heptágono.
 
     /**
@@ -20,8 +16,7 @@ public class Heptagono extends Figura {
      * @param centro El punto central inicial del heptágono.
      */
     public Heptagono(Point centro) {
-        this.centroGeometrico = centro;
-        this.verticeReferencia = new Point(centro); // Inicializar el vértice de referencia.
+        super(centro, new Point(centro));
     }
 
     /**
@@ -30,7 +25,7 @@ public class Heptagono extends Figura {
      */
     @Override
     public void actualizar(Point nuevoPunto) {
-        this.verticeReferencia = nuevoPunto;
+        setPunto(1, nuevoPunto);
     }
 
     /**
@@ -44,15 +39,15 @@ public class Heptagono extends Figura {
         g.setColor(colorDePrimerPlano); // Establecer el color para el contorno.
 
         // Calcular el radio
-        int radio = (int) centroGeometrico.distance(verticeReferencia); // Calcular el radio.
+        int radio = (int) getPunto(0).distance(getPunto(1)); // Calcular el radio.
         int[] puntosX = new int[numeroLados]; // Arreglo para almacenar las coordenadas x de los vértices.
         int[] puntosY = new int[numeroLados]; // Arreglo para almacenar las coordenadas y de los vértices.
 
         // Calcular coordenadas de los vértices
         for (int i = 0; i < numeroLados; i++) {
             double angulo = Math.toRadians(-90 + i * (360.0 / numeroLados)); // Calcular el ángulo para cada vértice. Comienza a -90 grados (hacia arriba).
-            puntosX[i] = centroGeometrico.x + (int) (radio * Math.cos(angulo)); // Calcular coordenada x.
-            puntosY[i] = centroGeometrico.y + (int) (radio * Math.sin(angulo)); // Calcular coordenada y.
+            puntosX[i] = getPunto(0).x + (int) (radio * Math.cos(angulo)); // Calcular coordenada x.
+            puntosY[i] = getPunto(0).y + (int) (radio * Math.sin(angulo)); // Calcular coordenada y.
         }
 
         Polygon heptagonoForma = new Polygon(puntosX, puntosY, numeroLados); // Crear un objeto Polygon para el heptágono.
@@ -78,23 +73,54 @@ public class Heptagono extends Figura {
     @Override
     public FiguraData getFiguraData() {
         FiguraData data = new FiguraData("Heptagono");
-        data.setPuntoInicial(this.puntoInicial);
-        data.setPuntoFinal(this.puntoFinal); // Para rectángulos, puntoInicial y puntoFinal definen el tamaño/posición
+        data.setPuntoInicial(this.getPunto(0));
+        data.setPuntoFinal(this.getPunto(1));
         data.setColorDePrimerPlano(this.colorDePrimerPlano);
         data.setColorDeRelleno(this.colorDeRelleno);
         data.setEstaRelleno(this.relleno);
-        // No tiene sentido para Rectangulo setear centro, puntosTrazo o tamanoBorrador
+        data.setCentro(this.getPunto(0)); // Guardar el centro explícitamente también por claridad
         return data;
     }
 
-    // Implementación de contains para Rectángulo (más precisa)
     @Override
     public boolean contains(Point p) {
-        int x = Math.min(puntoInicial.x, puntoFinal.x);
-        int y = Math.min(puntoInicial.y, puntoFinal.y);
-        int width = Math.abs(puntoFinal.x - puntoInicial.x);
-        int height = Math.abs(puntoFinal.y - puntoInicial.y);
-        // Crear un rectángulo Java y verificar si contiene el punto
-        return new java.awt.Rectangle(x, y, width, height).contains(p);
+        if (getPunto(0) == null || getPunto(1) == null) {
+            return false;
+        }
+
+        int radio = (int) getPunto(0).distance(getPunto(1));
+        ArrayList<Point> vertices = new ArrayList<>();
+        for (int i = 0; i < numeroLados; i++) {
+            double angle = Math.toRadians(-90 + i * (360.0 / numeroLados));
+            vertices.add(new Point(getPunto(0).x + (int) (radio * Math.cos(angle)), getPunto(0).y + (int) (radio * Math.sin(angle))));
+        }
+
+        // Ray casting algorithm to check if the point is inside the polygon
+        boolean inside = false;
+        for (int i = 0, j = vertices.size() - 1; i < vertices.size(); j = i++) {
+            if ((vertices.get(i).y > p.y) != (vertices.get(j).y > p.y) &&
+                    (p.x < (vertices.get(j).x - vertices.get(i).x) * (p.y - vertices.get(i).y) / (vertices.get(j).y - vertices.get(i).y) + vertices.get(i).x)) {
+                inside = !inside;
+            }
+        }
+        return inside;
+    }
+
+    @Override
+    public Rectangle getBounds() {
+        if (puntos.size() < 2) return null;
+
+        int radio = (int) getPunto(0).distance(getPunto(1));
+        return new Rectangle(getPunto(0).x - radio, getPunto(0).y - radio, radio * 2, radio * 2);
+    }
+
+    @Override
+    public void translate(Point offset) {
+        if (getPunto(0) != null) {
+            getPunto(0).translate(offset.x, offset.y);
+        }
+        if (getPunto(1) != null) {
+            getPunto(1).translate(offset.x, offset.y);
+        }
     }
 }

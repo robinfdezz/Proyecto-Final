@@ -72,13 +72,13 @@ public class PanelDeDibujo extends JPanel implements HerramientaSeleccionadaList
 
     }
 
-        // --- Implementación del listener ---
+        // --- Implementación del listener para cursores---
     @Override
     public void herramientaSeleccionadaCambio(String nuevaHerramienta) { // NUEVO
-        actualizarCursor(nuevaHerramienta); // NUEVO
+        actualizarCursor(nuevaHerramienta); 
     }
 
-    private void actualizarCursor(String herramienta) { // NUEVO
+    private void actualizarCursor(String herramienta) {
         switch (herramienta) {
             case "Lata de Pintura":
                 setCursor(cursorLataPintura);
@@ -187,10 +187,11 @@ public class PanelDeDibujo extends JPanel implements HerramientaSeleccionadaList
                 // Si la figura actual no es nula (es decir, es una herramienta de dibujo)
                 if (figuraActual != null) {
                     // Usamos los colores y estado de relleno DEL PANEL DE COLORES
-                    figuraActual.setColorDePrimerPlano(panelDeColores.getColorBordeActual()); // Establecer color de borde de la figura
-                    figuraActual.setColorDeRelleno(panelDeColores.getColorRellenoActual()); // Establecer color de relleno de la figura
-                    figuraActual.setRelleno(panelDeColores.isRellenar()); // Establecer estado de relleno de la figura
+                   figuraActual.setColorDePrimerPlano(panelDeColores.getColorBordeActual());
+        figuraActual.setColorDeRelleno(panelDeColores.getColorRellenoActual());
+        figuraActual.setRelleno(panelDeColores.isRellenar()); // ¡Asegúrate de esto!
 
+    System.out.println("Rellenar: " + panelDeColores.isRellenar() + ", Color Relleno: " + panelDeColores.getColorRellenoActual()); // *** AÑADIR ESTO ***
 
                     figuras.add(figuraActual); // Añadir la nueva figura a la lista.
                     figurasDeshechas.clear(); // Limpiar la pila de rehacer cuando se dibuja una nueva figura.

@@ -1,23 +1,24 @@
 package figuras;
 
 import java.awt.*;
+//import javafx.scene.shape.Rectangle;
+import java.awt.geom.Path2D;
 
 /**
  * Representa una forma de flecha.
- * Puede ser dibujado con una línea y una punta de flecha. La opción de relleno para la punta de flecha no está completamente implementada.
+ * Puede ser dibujado con una línea y una punta de flecha.
  */
 public class Flecha extends Figura {
-    private Point inicio; // El punto de inicio de la flecha.
-    private Point fin; // El punto final de la flecha (punta de la flecha).
-    Color colorDeRelleno = null; // Color de relleno local (nota: esto oculta el campo heredado y no se usa correctamente).
+
+    private static final double ARROW_ANGLE = Math.PI / 6; // Ángulo de la punta de flecha (30 grados)
+    private static final int ARROW_SIZE = 10; // Tamaño de la punta de flecha
 
     /**
      * Constructor de una Flecha que comienza en un punto dado.
      * @param inicio El punto de inicio inicial de la flecha.
      */
     public Flecha(Point inicio) {
-        this.inicio = inicio;
-        this.fin = inicio; // Inicialmente, el punto final es el mismo que el punto inicial.
+        super(inicio, new Point(inicio));
     }
 
     /**
@@ -26,110 +27,73 @@ public class Flecha extends Figura {
      */
     @Override
     public void actualizar(Point nuevoFin) {
-        this.fin = nuevoFin;
+        setPunto(1, nuevoFin);
     }
 
     /**
      * Dibuja la flecha (línea y punta de flecha) en el contexto gráfico dado.
-     * Nota: La lógica de relleno para la punta de flecha parece incompleta o incorrecta.
+     * La punta de la flecha se dibuja como un polígono relleno.
      * @param g El objeto Graphics sobre el que dibujar.
      */
     @Override
     public void dibujar(Graphics g) {
-        g.setColor(colorDePrimerPlano); // Establecer el color para dibujar la flecha.
+        Graphics2D g2d = (Graphics2D) g;
+        g2d.setColor(colorDePrimerPlano);
 
-        // Cálculo de coordenadas...
+        double dx = getPunto(1).x - getPunto(0).x;
+        double dy = getPunto(1).y - getPunto(0).y;
+        double angle = Math.atan2(dy, dx);
 
-        if (relleno) { // Verificar si el relleno está habilitado.
-            if (colorDeRelleno != null) { // Este colorDeRelleno local no es establecido por el panel de colores.
-                g.setColor(colorDeRelleno); // Esta línea usa el color local, probablemente siempre null.
-            }
-            int dx = fin.x - inicio.x; // Diferencia en coordenadas x.
-            int dy = fin.y - inicio.y; // Diferencia en coordenadas y.
-            double angulo = Math.atan2(dy, dx); // Calcular el ángulo de la flecha.
+        // Dibujar la línea
+        g2d.drawLine(getPunto(0).x, getPunto(0).y, getPunto(1).x, getPunto(1).y);
 
-            //int longitud = (int) inicio.distance(fin); // Calcular la longitud de la línea de la flecha.
+        // Calcular los puntos de la punta de la flecha
+        Path2D.Double arrowHead = new Path2D.Double();
+        arrowHead.moveTo(getPunto(1).x, getPunto(1).y);
+        arrowHead.lineTo(getPunto(1).x - ARROW_SIZE * Math.cos(angle - ARROW_ANGLE), getPunto(1).y - ARROW_SIZE * Math.sin(angle - ARROW_ANGLE));
+        arrowHead.lineTo(getPunto(1).x - ARROW_SIZE * Math.cos(angle + ARROW_ANGLE), getPunto(1).y - ARROW_SIZE * Math.sin(angle + ARROW_ANGLE));
+        arrowHead.closePath();
 
-            // Puntos para la línea del cuerpo de la flecha
-            int x1 = inicio.x;
-            int y1 = inicio.y;
-            int x2 = fin.x;
-            int y2 = fin.y;
-
-            g.drawLine(x1, y1, x2, y2); // Dibujar la línea principal de la flecha.
-
-            // Tamaño de la cabeza de flecha
-            int size = 30; // Tamaño de la punta de la flecha.
-
-            // Cálculo de los dos puntos de la cabeza de la flecha
-            int x3 = x2 - (int) (size * Math.cos(angulo - Math.PI / 6)); // Calcular coordenada x para un punto de la punta de flecha.
-            int y3 = y2 - (int) (size * Math.sin(angulo - Math.PI / 6)); // Calcular coordenada y para un punto de la punta de flecha.
-
-            int x4 = x2 - (int) (size * Math.cos(angulo + Math.PI / 6)); // Calcular coordenada x para el otro punto de la punta de flecha.
-            int y4 = y2 - (int) (size * Math.sin(angulo + Math.PI / 6)); // Calcular coordenada y para el otro punto de la punta de flecha.
-
-            Polygon cabeza = new Polygon(); // Crear un objeto Polygon para la punta de flecha.
-            cabeza.addPoint(x2, y2); // Añadir la punta de la flecha.
-            cabeza.addPoint(x3, y3); // Añadir el segundo punto.
-            cabeza.addPoint(x4, y4); // Añadir el tercer punto.
-            boolean relleno = false; // Esta variable local también oculta el campo heredado.
-
-            if (relleno) { // Esta condición siempre será false debido a la variable local.
-                g.fillPolygon(cabeza); // Esto nunca se ejecutará.
-            } else {
-                g.drawPolygon(cabeza); // Dibujar el contorno de la punta de flecha.
-            }
-        } else {
-            int dx = fin.x - inicio.x; // Diferencia en coordenadas x.
-            int dy = fin.y - inicio.y; // Diferencia en coordenadas y.
-            double angulo = Math.atan2(dy, dx); // Calcular el ángulo de la flecha.
-
-            // Puntos para la línea del cuerpo de la flecha
-            int x1 = inicio.x;
-            int y1 = inicio.y;
-            int x2 = fin.x;
-            int y2 = fin.y;
-
-            g.drawLine(x1, y1, x2, y2); // Dibujar la línea principal de la flecha.
-
-            // Tamaño de la cabeza de flecha
-            int size = 10; // Tamaño de la punta de la flecha.
-
-            // Cálculo de los dos puntos de la cabeza de la flecha
-            int x3 = x2 - (int) (size * Math.cos(angulo - Math.PI / 6)); // Calcular coordenada x para un punto de la punta de flecha.
-            int y3 = y2 - (int) (size * Math.sin(angulo - Math.PI / 6)); // Calcular coordenada y para un punto de la punta de flecha.
-
-            int x4 = x2 - (int) (size * Math.cos(angulo + Math.PI / 6)); // Calcular coordenada x para el otro punto de la punta de flecha.
-            int y4 = y2 - (int) (size * Math.sin(angulo + Math.PI / 6)); // Calcular coordenada y para el otro punto de la punta de flecha.
-
-            Polygon cabeza = new Polygon(); // Crear un objeto Polygon para la punta de flecha.
-            cabeza.addPoint(x2, y2); // Añadir la punta de la flecha.
-            cabeza.addPoint(x3, y3); // Añadir el segundo punto.
-            cabeza.addPoint(x4, y4); // Añadir el tercer punto.
-            g.drawPolygon(cabeza); // Dibujar el contorno de la punta de flecha.
+        // Rellenar la punta de la flecha
+        if (relleno && colorDeRelleno != null) {
+            g2d.setColor(colorDeRelleno);
+            g2d.fill(arrowHead);
+            g2d.setColor(colorDePrimerPlano); // Restaurar el color para el contorno
         }
+        g2d.draw(arrowHead); // Dibujar el contorno de la punta
     }
 
     @Override
     public FiguraData getFiguraData() {
         FiguraData data = new FiguraData("Flecha");
-        data.setPuntoInicial(this.puntoInicial);
-        data.setPuntoFinal(this.puntoFinal); // Para rectángulos, puntoInicial y puntoFinal definen el tamaño/posición
+        data.setPuntoInicial(this.getPunto(0));
+        data.setPuntoFinal(this.getPunto(1));
         data.setColorDePrimerPlano(this.colorDePrimerPlano);
         data.setColorDeRelleno(this.colorDeRelleno);
         data.setEstaRelleno(this.relleno);
-        // No tiene sentido para Rectangulo setear centro, puntosTrazo o tamanoBorrador
         return data;
     }
 
-    // Implementación de contains para Rectángulo (más precisa)
     @Override
     public boolean contains(Point p) {
-        int x = Math.min(puntoInicial.x, puntoFinal.x);
-        int y = Math.min(puntoInicial.y, puntoFinal.y);
-        int width = Math.abs(puntoFinal.x - puntoInicial.x);
-        int height = Math.abs(puntoFinal.y - puntoInicial.y);
-        // Crear un rectángulo Java y verificar si contiene el punto
-        return new Rectangle(x, y, width, height).contains(p);
+        // Implementación básica: verifica si el punto está cerca de alguno de los extremos
+        final int TOLERANCIA = 5;
+        if (getPunto(0) != null && p.distance(getPunto(0)) <= TOLERANCIA) {
+            return true;
+        }
+        if (getPunto(1) != null && p.distance(getPunto(1)) <= TOLERANCIA) {
+            return true;
+        }
+        return false;
+    }
+
+    @Override
+    public java.awt.Rectangle getBounds() {
+        if (puntos.size() < 2) return null;
+        int x = Math.min(getPunto(0).x, getPunto(1).x);
+        int y = Math.min(getPunto(0).y, getPunto(1).y);
+        int width = Math.abs(getPunto(1).x - getPunto(0).x);
+        int height = Math.abs(getPunto(1).y - getPunto(0).y);
+        return new java.awt.Rectangle(x, y, width, height);
     }
 }

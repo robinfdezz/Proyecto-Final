@@ -1,14 +1,4 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package figuras;
-
-/**
- *
- * @author marco
- */
-
 
 import java.awt.Graphics;
 import java.awt.Point;
@@ -19,16 +9,13 @@ import java.awt.Polygon;
  * Puede ser dibujado con un contorno y rellenado con un color separado.
  */
 public class Rombo extends Figura {
-    private Point centro; // El punto central del rombo.
-    private Point puntoActual; // Un punto que determina el tamaño y la forma del rombo.
 
     /**
      * Constructor de un Rombo con un punto central dado.
      * @param centro El punto central inicial del rombo.
      */
     public Rombo(Point centro) {
-        this.centro = centro;
-        this.puntoActual = centro;
+        super(centro, new Point(centro));
     }
 
     /**
@@ -37,7 +24,7 @@ public class Rombo extends Figura {
      */
     @Override
     public void actualizar(Point puntoActual) {
-        this.puntoActual = puntoActual;
+        setPunto(1, puntoActual);
     }
 
     /**
@@ -53,21 +40,21 @@ public class Rombo extends Figura {
             if (colorDeRelleno != null) {
                 g.setColor(colorDeRelleno); // Establecer el color de relleno.
             }
-            int dx = puntoActual.x - centro.x; // Calcular la distancia horizontal desde el centro.
-            int dy = puntoActual.y - centro.y; // Calcular la distancia vertical desde el centro.
+            int dx = getPunto(1).x - getPunto(0).x; // Calcular la distancia horizontal desde el centro.
+            int dy = getPunto(1).y - getPunto(0).y; // Calcular la distancia vertical desde el centro.
 
             int[] xPoints = { // Coordenadas x de los vértices del rombo.
-                    centro.x,
-                    centro.x + dx,
-                    centro.x,
-                    centro.x - dx
+                    getPunto(0).x,
+                    getPunto(0).x + dx,
+                    getPunto(0).x,
+                    getPunto(0).x - dx
             };
 
             int[] yPoints = { // Coordenadas y de los vértices del rombo.
-                    centro.y - dy,
-                    centro.y,
-                    centro.y + dy,
-                    centro.y
+                    getPunto(0).y - dy,
+                    getPunto(0).y,
+                    getPunto(0).y + dy,
+                    getPunto(0).y
             };
 
             Polygon rombo = new Polygon(xPoints, yPoints, 4); // Crear un objeto Polygon para el rombo.
@@ -80,21 +67,21 @@ public class Rombo extends Figura {
             }
         } else {
             // Si no hay relleno, solo dibujar el contorno.
-            int dx = puntoActual.x - centro.x;
-            int dy = puntoActual.y - centro.y;
+            int dx = getPunto(1).x - getPunto(0).x;
+            int dy = getPunto(1).y - getPunto(0).y;
 
             int[] xPoints = {
-                    centro.x,
-                    centro.x + dx,
-                    centro.x,
-                    centro.x - dx
+                    getPunto(0).x,
+                    getPunto(0).x + dx,
+                    getPunto(0).x,
+                    getPunto(0).x - dx
             };
 
             int[] yPoints = {
-                    centro.y - dy,
-                    centro.y,
-                    centro.y + dy,
-                    centro.y
+                    getPunto(0).y - dy,
+                    getPunto(0).y,
+                    getPunto(0).y + dy,
+                    getPunto(0).y
             };
 
             Polygon rombo = new Polygon(xPoints, yPoints, 4);
@@ -105,23 +92,59 @@ public class Rombo extends Figura {
     @Override
     public FiguraData getFiguraData() {
         FiguraData data = new FiguraData("Rombo");
-        data.setPuntoInicial(this.puntoInicial);
-        data.setPuntoFinal(this.puntoFinal); // Para rectángulos, puntoInicial y puntoFinal definen el tamaño/posición
+        data.setPuntoInicial(this.getPunto(0));
+        data.setPuntoFinal(this.getPunto(1));
         data.setColorDePrimerPlano(this.colorDePrimerPlano);
         data.setColorDeRelleno(this.colorDeRelleno);
         data.setEstaRelleno(this.relleno);
-        // No tiene sentido para Rectangulo setear centro, puntosTrazo o tamanoBorrador
+        data.setCentro(this.getPunto(0)); // Guardar el centro explícitamente también por claridad
         return data;
     }
 
-    // Implementación de contains para Rectángulo (más precisa)
     @Override
     public boolean contains(Point p) {
-        int x = Math.min(puntoInicial.x, puntoFinal.x);
-        int y = Math.min(puntoInicial.y, puntoFinal.y);
-        int width = Math.abs(puntoFinal.x - puntoInicial.x);
-        int height = Math.abs(puntoFinal.y - puntoInicial.y);
-        // Crear un rectángulo Java y verificar si contiene el punto
-        return new java.awt.Rectangle(x, y, width, height).contains(p);
+        if (getPunto(0) == null || getPunto(1) == null) {
+            return false;
+        }
+
+        // Calcular los vértices del rombo basado en el centro y el puntoActual.
+        int dx = getPunto(1).x - getPunto(0).x;
+        int dy = getPunto(1).y - getPunto(0).y;
+
+        Point[] vertices = new Point[]{
+                getPunto(0),
+                new Point(getPunto(0).x + dx, getPunto(0).y),
+                new Point(getPunto(0).x, getPunto(0).y + dy),
+                new Point(getPunto(0).x - dx, getPunto(0).y)
+        };
+
+        // Ray casting algorithm to check if the point is inside the polygon
+        boolean inside = false;
+        for (int i = 0, j = vertices.length - 1; i < vertices.length; j = i++) {
+            if ((vertices[i].y > p.y) != (vertices[j].y > p.y) &&
+                    (p.x < (vertices[j].x - vertices[i].x) * (p.y - vertices[i].y) / (vertices[j].y - vertices[i].y) + vertices[i].x)) {
+                inside = !inside;
+            }
+        }
+        return inside;
+    }
+
+    @Override
+    public java.awt.Rectangle getBounds() {
+        if (puntos.size() < 2) return null;
+
+        int dx = Math.abs(getPunto(1).x - getPunto(0).x);
+        int dy = Math.abs(getPunto(1).y - getPunto(0).y);
+        return new java.awt.Rectangle(getPunto(0).x - dx, getPunto(0).y - dy, dx * 2, dy * 2);
+    }
+
+    @Override
+    public void translate(Point offset) {
+        if (getPunto(0) != null) {
+            getPunto(0).translate(offset.x, offset.y);
+        }
+        if (getPunto(1) != null) {
+            getPunto(1).translate(offset.x, offset.y);
+        }
     }
 }

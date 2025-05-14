@@ -8,19 +8,13 @@ import java.awt.*;
  * Nota: La implementación actual dibuja tipos específicos de triángulos rectángulos.
  */
 public class Triangulo extends Figura {
-    private Point puntoInicial; // El punto de inicio.
-    private Point puntoFinal; // El punto final que determina la forma del triángulo.
-
-    // Eliminar esta variable local que oculta la heredada
-    // boolean relleno = false; // Esta variable local oculta el campo heredado.
 
     /**
      * Constructor de un Triángulo con un punto inicial dado.
      * @param puntoInicial El punto inicial del triángulo.
      */
     public Triangulo(Point puntoInicial) {
-        this.puntoInicial = puntoInicial;
-        this.puntoFinal = puntoInicial;
+        super(puntoInicial, new Point(puntoInicial));
     }
 
     /**
@@ -29,7 +23,7 @@ public class Triangulo extends Figura {
      */
     @Override
     public void actualizar(Point puntoActual) {
-        this.puntoFinal = puntoActual;
+        setPunto(1, puntoActual);
     }
 
     /**
@@ -38,8 +32,7 @@ public class Triangulo extends Figura {
      * Dibuja un polígono relleno si 'relleno' es true, y un contorno de polígono.
      * @param g El objeto Graphics sobre el que dibujar.
      */
-
-@Override
+    @Override
     public void dibujar(Graphics g) {
         g.setColor(colorDePrimerPlano); // Establecer el color para el contorno.
 
@@ -48,12 +41,12 @@ public class Triangulo extends Figura {
 
         // Determinar el tipo de triángulo basado en la posición del puntoFinal
         // Esta lógica crea triángulos rectángulos específicos.
-        if (puntoFinal.x > puntoInicial.x) {
-            xPoints = new int[]{puntoInicial.x, puntoFinal.x, puntoInicial.x};
-            yPoints = new int[]{puntoInicial.y, puntoFinal.y, puntoFinal.y};
+        if (getPunto(1).x > getPunto(0).x) {
+            xPoints = new int[]{getPunto(0).x, getPunto(1).x, getPunto(0).x};
+            yPoints = new int[]{getPunto(0).y, getPunto(1).y, getPunto(1).y};
         } else {
-            xPoints = new int[]{puntoInicial.x, puntoFinal.x, puntoInicial.x};
-            yPoints = new int[]{puntoInicial.y, puntoFinal.y, puntoInicial.y};
+            xPoints = new int[]{getPunto(0).x, getPunto(1).x, getPunto(0).x};
+            yPoints = new int[]{getPunto(0).y, getPunto(1).y, getPunto(0).y};
         }
 
         if (relleno) { // Verificar si el relleno está habilitado.
@@ -75,8 +68,8 @@ public class Triangulo extends Figura {
     @Override
     public FiguraData getFiguraData() {
         FiguraData data = new FiguraData("Triangulo");
-        data.setPuntoInicial(this.puntoInicial);
-        data.setPuntoFinal(this.puntoFinal); // Para rectángulos, puntoInicial y puntoFinal definen el tamaño/posición
+        data.setPuntoInicial(this.getPunto(0));
+        data.setPuntoFinal(this.getPunto(1)); // Para rectángulos, puntoInicial y puntoFinal definen el tamaño/posición
         data.setColorDePrimerPlano(this.colorDePrimerPlano);
         data.setColorDeRelleno(this.colorDeRelleno);
         data.setEstaRelleno(this.relleno);
@@ -87,20 +80,22 @@ public class Triangulo extends Figura {
     // Implementación de contains para Rectángulo (más precisa)
     @Override
     public boolean contains(Point p) {
-        int x = Math.min(puntoInicial.x, puntoFinal.x);
-        int y = Math.min(puntoInicial.y, puntoFinal.y);
-        int width = Math.abs(puntoFinal.x - puntoInicial.x);
-        int height = Math.abs(puntoFinal.y - puntoInicial.y);
+        int x = Math.min(getPunto(0).x, getPunto(1).x);
+        int y = Math.min(getPunto(0).y, getPunto(1).y);
+        int width = Math.abs(getPunto(1).x - getPunto(0).x);
+        int height = Math.abs(getPunto(1).y - getPunto(0).y);
         // Crear un rectángulo Java y verificar si contiene el punto
         return new java.awt.Rectangle(x, y, width, height).contains(p);
     }
 
-@Override
-    public Rectangle getBounds() {
-        int x = Math.min(puntoInicial.x, puntoFinal.x);
-        int y = Math.min(puntoInicial.y, puntoFinal.y);
-        int width = Math.abs(puntoFinal.x - puntoInicial.x);
-        int height = Math.abs(puntoFinal.y - puntoInicial.y);
-        return new java.awt.Rectangle(x, y, width, height);
+    @Override
+    public java.awt.Rectangle getBounds() {
+        if (puntos.size() < 2) return null;
+
+        int x = Math.min(getPunto(0).x, getPunto(1).x);
+        int y = Math.min(getPunto(0).y, getPunto(1).y);
+        int width = Math.abs(getPunto(1).x - getPunto(0).x);
+        int height = Math.abs(getPunto(1).y - getPunto(0).y);
+        return new Rectangle(x, y, width, height);
     }
 }

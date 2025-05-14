@@ -1,31 +1,20 @@
 package figuras;
 
-import java.awt.Color;
-import java.awt.Graphics;
-import java.awt.Graphics2D;
-import java.awt.Point;
-import java.awt.Rectangle; // Importar Rectangle
+import java.awt.*;
 import java.awt.geom.Path2D;
 
 /**
  * Representa una forma de corazón que puede ser dibujada y rellenada.
  * Extiende la clase abstracta Figura.
- * @author Bryan (modificado)
  */
 public class Corazon extends Figura {
-    // Usamos puntoInicial como esquina superior izquierda del bounding box inicial
-    // y puntoFinal como esquina opuesta del bounding box.
-    // protected Point puntoInicial; // Heredado de Figura
-    // protected Point puntoFinal;   // Heredado de Figura
-
 
     /**
      * Constructor de un Corazon con un punto inicial.
      * @param puntoInicial El punto donde se inicia el dibujo del corazón.
      */
     public Corazon(Point puntoInicial) {
-        this.puntoInicial = puntoInicial;
-        this.puntoFinal = new Point(puntoInicial); // Inicialmente el punto final es el mismo que el inicial
+        super(puntoInicial, new Point(puntoInicial));
     }
 
     /**
@@ -34,7 +23,7 @@ public class Corazon extends Figura {
      */
     @Override
     public void actualizar(Point puntoActual) {
-        this.puntoFinal = puntoActual;
+        setPunto(1, puntoActual);
     }
 
     /**
@@ -48,10 +37,10 @@ public class Corazon extends Figura {
         Graphics2D g2 = (Graphics2D) g;
 
         // Calcular las coordenadas del cuadro delimitador
-        int x = Math.min(puntoInicial.x, puntoFinal.x);
-        int y = Math.min(puntoInicial.y, puntoFinal.y);
-        int width = Math.abs(puntoFinal.x - puntoInicial.x);
-        int height = Math.abs(puntoFinal.y - puntoInicial.y);
+        int x = Math.min(getPunto(0).x, getPunto(1).x);
+        int y = Math.min(getPunto(0).y, getPunto(1).y);
+        int width = Math.abs(getPunto(1).x - getPunto(0).x);
+        int height = Math.abs(getPunto(1).y - getPunto(0).y);
 
         // Asegurar que el tamaño sea positivo para evitar errores de dibujo
         if (width <= 0 || height <= 0) {
@@ -130,8 +119,8 @@ public class Corazon extends Figura {
     @Override
     public FiguraData getFiguraData() {
         FiguraData data = new FiguraData("Corazón"); // Tipo correcto
-        data.setPuntoInicial(this.puntoInicial); // Esquina superior izquierda del bounding box
-        data.setPuntoFinal(this.puntoFinal); // Esquina opuesta del bounding box
+        data.setPuntoInicial(this.getPunto(0)); // Esquina superior izquierda del bounding box
+        data.setPuntoFinal(this.getPunto(1)); // Esquina opuesta del bounding box
         data.setColorDePrimerPlano(this.colorDePrimerPlano); // Usar colorDePrimerLano heredado
         data.setColorDeRelleno(this.colorDeRelleno);
         data.setEstaRelleno(this.relleno);
@@ -146,14 +135,14 @@ public class Corazon extends Figura {
      */
     @Override
     public boolean contains(Point p) {
-        if (puntoInicial == null || puntoFinal == null || p == null) {
+        if (getPunto(0) == null || getPunto(1) == null || p == null) {
             return false;
         }
         // Para formas complejas como el corazón, usar Path2D.contains() es más preciso.
-        int x = Math.min(puntoInicial.x, puntoFinal.x);
-        int y = Math.min(puntoInicial.y, puntoFinal.y);
-        int width = Math.abs(puntoFinal.x - puntoInicial.x);
-        int height = Math.abs(puntoFinal.y - puntoInicial.y);
+        int x = Math.min(getPunto(0).x, getPunto(1).x);
+        int y = Math.min(getPunto(0).y, getPunto(1).y);
+        int width = Math.abs(getPunto(1).x - getPunto(0).x);
+        int height = Math.abs(getPunto(1).y - getPunto(0).y);
 
         if (width <= 0 || height <= 0) {
             return false;
@@ -189,17 +178,17 @@ public class Corazon extends Figura {
 
     /**
      * Obtiene el rectángulo delimitador (bounding box) del corazón.
+     *
      * @return Un objeto Rectangle que representa el área delimitador del corazón.
      */
     @Override
     public Rectangle getBounds() {
-        if (puntoInicial != null && puntoFinal != null) {
-            int x = Math.min(puntoInicial.x, puntoFinal.x);
-            int y = Math.min(puntoInicial.y, puntoFinal.y);
-            int width = Math.abs(puntoFinal.x - puntoInicial.x);
-            int height = Math.abs(puntoFinal.y - puntoInicial.y);
-            return new Rectangle(x, y, width, height);
-        }
-        return null;
+        if (puntos.size() < 2) return null;
+
+        int x = Math.min(getPunto(0).x, getPunto(1).x);
+        int y = Math.min(getPunto(0).y, getPunto(1).y);
+        int width = Math.abs(getPunto(1).x - getPunto(0).x);
+        int height = Math.abs(getPunto(1).y - getPunto(0).y);
+        return new Rectangle(x, y, width, height);
     }
 }

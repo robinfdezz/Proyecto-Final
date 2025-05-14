@@ -1,34 +1,23 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package figuras;
-
-/**
- *
- * @author marco
- */
-
 
 import java.awt.Graphics;
 import java.awt.Point;
 import java.awt.Polygon;
+import java.util.ArrayList;
 
 /**
  * Representa una forma de pentágono (polígono de 5 lados).
  * Puede ser dibujado con un contorno y rellenado con un color separado.
  */
 public class Pentagono extends Figura {
-    private Point centro; // El punto central del pentágono.
-    private Point puntoActual; // El punto actual que determina el tamaño y la orientación.
+    private int numeroLados = 5; // Constante para el número de lados del pentágono.
 
     /**
      * Constructor de un Pentágono con un punto central dado.
      * @param centro El punto central inicial del pentágono.
      */
     public Pentagono(Point centro) {
-        this.centro = centro;
-        this.puntoActual = centro;
+        super(centro, new Point(centro));
     }
 
     /**
@@ -37,7 +26,7 @@ public class Pentagono extends Figura {
      */
     @Override
     public void actualizar(Point puntoActual) {
-        this.puntoActual = puntoActual;
+        setPunto(1, puntoActual);
     }
 
     /**
@@ -53,15 +42,15 @@ public class Pentagono extends Figura {
             if (colorDeRelleno != null) {
                 g.setColor(colorDeRelleno); // Establecer el color de relleno.
             }
-            int radio = (int) centro.distance(puntoActual); // Calcular el radio.
-            int[] xPoints = new int[5]; // Arreglo para almacenar las coordenadas x de los vértices.
-            int[] yPoints = new int[5]; // Arreglo para almacenar las coordenadas y de los vértices.
+            int radio = (int) getPunto(0).distance(getPunto(1)); // Calcular el radio.
+            int[] xPoints = new int[numeroLados]; // Arreglo para almacenar las coordenadas x de los vértices.
+            int[] yPoints = new int[numeroLados]; // Arreglo para almacenar las coordenadas y de los vértices.
 
             // Calcular coordenadas de los vértices.
-            for (int i = 0; i < 5; i++) {
+            for (int i = 0; i < numeroLados; i++) {
                 double angle = Math.toRadians(-90 + i * 72); // Calcular el ángulo para cada vértice (72 grados por lado para un pentágono). Comienza apuntando hacia arriba (-90 grados).
-                xPoints[i] = centro.x + (int) (radio * Math.cos(angle)); // Calcular coordenada x.
-                yPoints[i] = centro.y + (int) (radio * Math.sin(angle)); // Calcular coordenada y.
+                xPoints[i] = getPunto(0).x + (int) (radio * Math.cos(angle)); // Calcular coordenada x.
+                yPoints[i] = getPunto(0).y + (int) (radio * Math.sin(angle)); // Calcular coordenada y.
             }
 
             Polygon pentagono = new Polygon(xPoints, yPoints, 5); // Crear un objeto Polygon para el pentágono.
@@ -74,14 +63,14 @@ public class Pentagono extends Figura {
             }
         } else {
             // Si no hay relleno, solo dibujar el contorno.
-            int radio = (int) centro.distance(puntoActual);
+            int radio = (int) getPunto(0).distance(getPunto(1));
             int[] xPoints = new int[5];
             int[] yPoints = new int[5];
 
             for (int i = 0; i < 5; i++) {
                 double angle = Math.toRadians(-90 + i * 72);
-                xPoints[i] = centro.x + (int) (radio * Math.cos(angle));
-                yPoints[i] = centro.y + (int) (radio * Math.sin(angle));
+                xPoints[i] = getPunto(0).x + (int) (radio * Math.cos(angle));
+                yPoints[i] = getPunto(0).y + (int) (radio * Math.sin(angle));
             }
 
             Polygon pentagono = new Polygon(xPoints, yPoints, 5);
@@ -92,23 +81,54 @@ public class Pentagono extends Figura {
     @Override
     public FiguraData getFiguraData() {
         FiguraData data = new FiguraData("Pentagono");
-        data.setPuntoInicial(this.puntoInicial);
-        data.setPuntoFinal(this.puntoFinal); // Para rectángulos, puntoInicial y puntoFinal definen el tamaño/posición
+        data.setPuntoInicial(this.getPunto(0));
+        data.setPuntoFinal(this.getPunto(1));
         data.setColorDePrimerPlano(this.colorDePrimerPlano);
         data.setColorDeRelleno(this.colorDeRelleno);
         data.setEstaRelleno(this.relleno);
-        // No tiene sentido para Rectangulo setear centro, puntosTrazo o tamanoBorrador
+        data.setCentro(this.getPunto(0)); // Guardar el centro explícitamente también por claridad
         return data;
     }
 
-    // Implementación de contains para Rectángulo (más precisa)
     @Override
     public boolean contains(Point p) {
-        int x = Math.min(puntoInicial.x, puntoFinal.x);
-        int y = Math.min(puntoInicial.y, puntoFinal.y);
-        int width = Math.abs(puntoFinal.x - puntoInicial.x);
-        int height = Math.abs(puntoFinal.y - puntoInicial.y);
-        // Crear un rectángulo Java y verificar si contiene el punto
-        return new java.awt.Rectangle(x, y, width, height).contains(p);
+        if (getPunto(0) == null || getPunto(1) == null) {
+            return false;
+        }
+
+        int radio = (int) getPunto(0).distance(getPunto(1));
+        ArrayList<Point> vertices = new ArrayList<>();
+        for (int i = 0; i < numeroLados; i++) {
+            double angle = Math.toRadians(-90 + i * 72);
+            vertices.add(new Point(getPunto(0).x + (int) (radio * Math.cos(angle)), getPunto(0).y + (int) (radio * Math.sin(angle))));
+        }
+
+        // Ray casting algorithm to check if the point is inside the polygon
+        boolean inside = false;
+        for (int i = 0, j = vertices.size() - 1; i < vertices.size(); j = i++) {
+            if ((vertices.get(i).y > p.y) != (vertices.get(j).y > p.y) &&
+                    (p.x < (vertices.get(j).x - vertices.get(i).x) * (p.y - vertices.get(i).y) / (vertices.get(j).y - vertices.get(i).y) + vertices.get(i).x)) {
+                inside = !inside;
+            }
+        }
+        return inside;
+    }
+
+    @Override
+    public java.awt.Rectangle getBounds() {
+        if (puntos.size() < 2) return null;
+
+        int radio = (int) getPunto(0).distance(getPunto(1));
+        return new java.awt.Rectangle(getPunto(0).x - radio, getPunto(0).y - radio, radio * 2, radio * 2);
+    }
+
+    @Override
+    public void translate(Point offset) {
+        if (getPunto(0) != null) {
+            getPunto(0).translate(offset.x, offset.y);
+        }
+        if (getPunto(1) != null) {
+            getPunto(1).translate(offset.x, offset.y);
+        }
     }
 }

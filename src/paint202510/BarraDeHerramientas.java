@@ -159,15 +159,11 @@ public class BarraDeHerramientas extends JToolBar{
                 JToggleButton sourceButton = (JToggleButton) e.getSource();
                 if (sourceButton.isSelected()) {
                     // Deseleccionar la figura en el panel de dibujo al cambiar a cualquier herramienta
-                    if (sourceButton.isSelected()) {
-                    notificarCambioDeHerramienta(); // NUEVO
-                }
+                    notificarCambioDeHerramienta(); // notif del cambio de herramienta
                     if (panelDeColores != null && panelDeColores.getPanelDeDibujo() != null) {
                         panelDeColores.getPanelDeDibujo().deseleccionarFigura();
                         panelDeColores.getPanelDeDibujo().repaint(); // Repintar para ocultar el borde de selección
                     }
-                    // La coordinación con PanelDeColores (deseleccionar su botón de selección si existiera)
-                    // ya no es necesaria porque el botón de selección está aquí.
                 }
             }
         };
@@ -217,7 +213,7 @@ public class BarraDeHerramientas extends JToolBar{
 
     }
 
-    // --- NUEVOS MÉTODOS ---
+    // --- Metodos para herramienta seleccionada ---
     public void setHerramientaSeleccionadaListener(HerramientaSeleccionadaListener listener) {
         this.herramientaSeleccionadaListener = listener;
     }

@@ -7,16 +7,13 @@ import java.awt.*;
  * Puede ser dibujado con un contorno y rellenado con un color separado.
  */
 public class Ovalo extends Figura {
-    private Point puntoInicial; // El punto de inicio (típicamente la ubicación donde se presionó el ratón).
-    private Point puntoFinal; // El punto final (típicamente la ubicación donde se soltó el ratón).
 
     /**
      * Constructor de un Óvalo con un punto inicial dado.
      * @param puntoInicial El punto inicial del óvalo.
      */
     public Ovalo(Point puntoInicial) {
-        this.puntoInicial = puntoInicial;
-        this.puntoFinal = puntoInicial; // Inicialmente igual al punto inicial.
+        super(puntoInicial, new Point(puntoInicial));
     }
 
     /**
@@ -25,7 +22,7 @@ public class Ovalo extends Figura {
      */
     @Override
     public void actualizar(Point puntoActual) {
-        this.puntoFinal = puntoActual;
+        setPunto(1, puntoActual);
     }
 
     /**
@@ -38,10 +35,10 @@ public class Ovalo extends Figura {
         g.setColor(colorDePrimerPlano); // Establecer el color para el contorno.
 
         // Calcular las coordenadas de la esquina superior izquierda, el ancho y la altura del cuadro delimitador.
-        int x = Math.min(puntoInicial.x, puntoFinal.x);
-        int y = Math.min(puntoInicial.y, puntoFinal.y);
-        int width = Math.abs(puntoFinal.x - puntoInicial.x);
-        int height = Math.abs(puntoFinal.y - puntoInicial.y);
+        int x = Math.min(getPunto(0).x, getPunto(1).x);
+        int y = Math.min(getPunto(0).y, getPunto(1).y);
+        int width = Math.abs(getPunto(1).x - getPunto(0).x);
+        int height = Math.abs(getPunto(1).y - getPunto(0).y);
 
         if (relleno) { // Verificar si el relleno está habilitado.
             if (colorDeRelleno != null) {
@@ -62,8 +59,8 @@ public class Ovalo extends Figura {
     @Override
     public FiguraData getFiguraData() {
         FiguraData data = new FiguraData("Ovalo");
-        data.setPuntoInicial(this.puntoInicial);
-        data.setPuntoFinal(this.puntoFinal); // Para rectángulos, puntoInicial y puntoFinal definen el tamaño/posición
+        data.setPuntoInicial(this.getPunto(0));
+        data.setPuntoFinal(this.getPunto(1)); // Para rectángulos, puntoInicial y puntoFinal definen el tamaño/posición
         data.setColorDePrimerPlano(this.colorDePrimerPlano);
         data.setColorDeRelleno(this.colorDeRelleno);
         data.setEstaRelleno(this.relleno);
@@ -74,20 +71,22 @@ public class Ovalo extends Figura {
     // Implementación de contains para Rectángulo (más precisa)
     @Override
     public boolean contains(Point p) {
-        int x = Math.min(puntoInicial.x, puntoFinal.x);
-        int y = Math.min(puntoInicial.y, puntoFinal.y);
-        int width = Math.abs(puntoFinal.x - puntoInicial.x);
-        int height = Math.abs(puntoFinal.y - puntoInicial.y);
+        int x = Math.min(getPunto(0).x, getPunto(1).x);
+        int y = Math.min(getPunto(0).y, getPunto(1).y);
+        int width = Math.abs(getPunto(1).x - getPunto(0).x);
+        int height = Math.abs(getPunto(1).y - getPunto(0).y);
         // Crear un rectángulo Java y verificar si contiene el punto
         return new java.awt.Rectangle(x, y, width, height).contains(p);
     }
 
-@Override
+    @Override
     public Rectangle getBounds() {
-        int x = Math.min(puntoInicial.x, puntoFinal.x);
-        int y = Math.min(puntoInicial.y, puntoFinal.y);
-        int width = Math.abs(puntoFinal.x - puntoInicial.x);
-        int height = Math.abs(puntoFinal.y - puntoInicial.y);
-        return new java.awt.Rectangle(x, y, width, height);
+        if (puntos.size() < 2) return null;
+
+        int x = Math.min(getPunto(0).x, getPunto(1).x);
+        int y = Math.min(getPunto(0).y, getPunto(1).y);
+        int width = Math.abs(getPunto(1).x - getPunto(0).x);
+        int height = Math.abs(getPunto(1).y - getPunto(0).y);
+        return new Rectangle(x, y, width, height);
     }
 }

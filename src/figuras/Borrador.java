@@ -1,9 +1,6 @@
 package figuras;
 
-import java.awt.Color;
-import java.awt.Graphics;
-import java.awt.Point;
-import java.awt.Rectangle; // Importar Rectangle
+import java.awt.*;
 
 /**
  * Representa una herramienta de borrador.
@@ -11,9 +8,7 @@ import java.awt.Rectangle; // Importar Rectangle
  * Borrador no es una figura seleccionable/copiable/pegable de la misma manera que otras.
  */
 public class Borrador extends Figura {
-    private int tamano = 50; // El tamaño del pincel del borrador.
-    // Usamos puntoInicial como centro del borrador
-    // protected Point puntoInicial; // Heredado de Figura, representa el centro
+    private int tamano = 20; // El tamaño del pincel del borrador.
 
     /**
      * Constructor de un Borrador en un punto dado.
@@ -21,7 +16,7 @@ public class Borrador extends Figura {
      * @param p El punto inicial del borrador.
      */
     public Borrador(Point p) {
-        this.puntoInicial = p; // Usamos puntoInicial como centro
+        super(p); // Llama al constructor de Figura con el punto inicial
         this.colorDePrimerPlano = Color.WHITE; // El borrador dibuja en blanco para coincidir con el fondo.
         // Borrador no usa relleno ni color de relleno
         this.relleno = false;
@@ -36,7 +31,7 @@ public class Borrador extends Figura {
     public void dibujar(Graphics g) {
         // El borrador siempre dibuja en blanco para simular borrado
         g.setColor(Color.WHITE);
-        g.fillOval(puntoInicial.x - tamano / 2, puntoInicial.y - tamano / 2, tamano, tamano); // Dibujar un óvalo blanco relleno.
+        g.fillOval(getPunto(0).x - tamano / 2, getPunto(0).y - tamano / 2, tamano, tamano); // Dibujar un óvalo blanco relleno.
     }
 
     /**
@@ -45,7 +40,7 @@ public class Borrador extends Figura {
      */
     @Override
     public void actualizar(Point p) {
-        this.puntoInicial = p; // Actualiza el centro del borrador
+        setPunto(0, p); // Actualiza el centro del borrador
     }
 
     /**
@@ -63,7 +58,6 @@ public class Borrador extends Figura {
     public int getTamano() {
         return tamano;
     }
-
 
     /**
      * Obtiene un objeto FiguraData que represente los datos de este borrador.
@@ -94,14 +88,15 @@ public class Borrador extends Figura {
 
     /**
      * Obtiene el rectángulo delimitador del borrador (basado en su posición y tamaño).
+     *
      * @return Un objeto Rectangle que representa el área del borrador.
      */
     @Override
-    public Rectangle getBounds() {
-        if (puntoInicial != null) {
-            int x = puntoInicial.x - tamano / 2;
-            int y = puntoInicial.y - tamano / 2;
-            return new Rectangle(x, y, tamano, tamano);
+    public java.awt.Rectangle getBounds() {
+        if (getPunto(0) != null) {
+            int x = getPunto(0).x - tamano / 2;
+            int y = getPunto(0).y - tamano / 2;
+            return new java.awt.Rectangle(x, y, tamano, tamano); // javafx.scene.shape.Rectangle
         }
         return null;
     }
@@ -112,8 +107,8 @@ public class Borrador extends Figura {
      */
     @Override
     public void translate(Point offset) {
-        if (puntoInicial != null) {
-            puntoInicial.translate(offset.x, offset.y);
+        if (getPunto(0) != null) {
+            getPunto(0).translate(offset.x, offset.y);
         }
         // El borrador solo tiene un punto relevante (el centro).
     }

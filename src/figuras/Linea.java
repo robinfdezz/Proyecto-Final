@@ -1,15 +1,12 @@
 package figuras;
 
-import java.awt.Graphics;
-import java.awt.Point;
+import java.awt.*;
 
 /**
  * Representa un segmento de línea recta.
  * Puede ser dibujado con un color especificado.
  */
 public class Linea extends Figura {
-    private Point puntoInicial; // El punto de inicio de la línea.
-    private Point puntoFinal; // El punto final de la línea.
 
     /**
      * Constructor de una Línea con puntos inicial y final dados.
@@ -17,8 +14,7 @@ public class Linea extends Figura {
      * @param puntoFinal El punto final de la línea.
      */
     public Linea(Point puntoInicial, Point puntoFinal) {
-        this.puntoInicial = puntoInicial;
-        this.puntoFinal = puntoFinal;
+        super(puntoInicial, puntoFinal);
     }
 
     /**
@@ -37,7 +33,7 @@ public class Linea extends Figura {
     @Override
     public void dibujar(Graphics g) {
         g.setColor(colorDePrimerPlano); // Usar colorDePrimerPlano de la clase base.
-        g.drawLine(puntoInicial.x, puntoInicial.y, puntoFinal.x, puntoFinal.y); // Dibujar la línea.
+        g.drawLine(getPunto(0).x, getPunto(0).y, getPunto(1).x, getPunto(1).y); // Dibujar la línea.
     }
 
     /**
@@ -46,29 +42,40 @@ public class Linea extends Figura {
      */
     @Override
     public void actualizar(Point puntoActual) {
-        puntoFinal = puntoActual;
+        setPunto(1, puntoActual);
     }
 
     @Override
     public FiguraData getFiguraData() {
         FiguraData data = new FiguraData("Linea");
-        data.setPuntoInicial(this.puntoInicial);
-        data.setPuntoFinal(this.puntoFinal); // Para rectángulos, puntoInicial y puntoFinal definen el tamaño/posición
+        data.setPuntoInicial(this.getPunto(0));
+        data.setPuntoFinal(this.getPunto(1));
         data.setColorDePrimerPlano(this.colorDePrimerPlano);
         data.setColorDeRelleno(this.colorDeRelleno);
         data.setEstaRelleno(this.relleno);
-        // No tiene sentido para Rectangulo setear centro, puntosTrazo o tamanoBorrador
         return data;
     }
 
-    // Implementación de contains para Rectángulo (más precisa)
     @Override
     public boolean contains(Point p) {
-        int x = Math.min(puntoInicial.x, puntoFinal.x);
-        int y = Math.min(puntoInicial.y, puntoFinal.y);
-        int width = Math.abs(puntoFinal.x - puntoInicial.x);
-        int height = Math.abs(puntoFinal.y - puntoInicial.y);
-        // Crear un rectángulo Java y verificar si contiene el punto
-        return new java.awt.Rectangle(x, y, width, height).contains(p);
+        // Implementación básica: verifica si el punto está cerca de alguno de los extremos
+        final int TOLERANCIA = 5;
+        if (getPunto(0) != null && p.distance(getPunto(0)) <= TOLERANCIA) {
+            return true;
+        }
+        if (getPunto(1) != null && p.distance(getPunto(1)) <= TOLERANCIA) {
+            return true;
+        }
+        return false;
+    }
+
+    @Override
+    public Rectangle getBounds() {
+        if (puntos.size() < 2) return null;
+        int x = Math.min(getPunto(0).x, getPunto(1).x);
+        int y = Math.min(getPunto(0).y, getPunto(1).y);
+        int width = Math.abs(getPunto(1).x - getPunto(0).x);
+        int height = Math.abs(getPunto(1).y - getPunto(0).y);
+        return new Rectangle(x, y, width, height);
     }
 }

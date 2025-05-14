@@ -1,28 +1,19 @@
 package figuras;
 
-import java.awt.Graphics;
-import java.awt.Graphics2D;
-import java.awt.Point; // Importar Point
-import java.awt.Polygon; // Importar Polygon
+import java.awt.*;
 
 /**
  * Representa una forma de trapecio que puede ser dibujada y rellenada.
  * Extiende la clase abstracta Figura.
- * @author Bryan
  */
-public class Trapecio extends Figura { // Extender de Figura
-    private final Point puntoInicial; // Punto de inicio (esquina superior izquierda del bounding box inicial)
-    private Point puntoActual; // Punto actual (determina tamaño y forma del trapecio)
+public class Trapecio extends Figura {
 
     /**
      * Constructor de un Trapecio con un punto inicial.
      * @param puntoInicial El punto donde se inicia el dibujo del trapecio.
      */
     public Trapecio(Point puntoInicial) {
-        this.puntoInicial = puntoInicial;
-        this.puntoActual = puntoInicial; // Inicialmente el punto actual es el mismo que el inicial
-        // Los colores y el estado de relleno se heredarán de Figura y se establecerán
-        // en PanelDeDibujo antes de añadir la figura a la lista.
+        super(puntoInicial, new Point(puntoInicial));
     }
 
     /**
@@ -31,7 +22,7 @@ public class Trapecio extends Figura { // Extender de Figura
      */
     @Override
     public void actualizar(Point puntoActual) {
-        this.puntoActual = puntoActual;
+        setPunto(1, puntoActual);
     }
 
     /**
@@ -45,10 +36,10 @@ public class Trapecio extends Figura { // Extender de Figura
         Graphics2D g2 = (Graphics2D) g;
 
         // Calcular las coordenadas del cuadro delimitador
-        int x = Math.min(puntoInicial.x, puntoActual.x);
-        int y = Math.min(puntoInicial.y, puntoActual.y);
-        int width = Math.abs(puntoActual.x - puntoInicial.x);
-        int height = Math.abs(puntoActual.y - puntoInicial.y);
+        int x = Math.min(getPunto(0).x, getPunto(1).x);
+        int y = Math.min(getPunto(0).y, getPunto(1).y);
+        int width = Math.abs(getPunto(1).x - getPunto(0).x);
+        int height = Math.abs(getPunto(1).y - getPunto(0).y);
 
         // Calcular los puntos del trapecio.
         // Este es un ejemplo simple de un trapecio isósceles.
@@ -82,14 +73,7 @@ public class Trapecio extends Figura { // Extender de Figura
             if (colorDeRelleno != colorDePrimerPlano && colorDeRelleno != null) {
                 g2.setColor(colorDePrimerPlano); // Usar colorDePrimerPlano (propiedad heredada)
                 g2.drawPolygon(trapecioForma); // Dibujar el contorno del trapecio
-            }  // Si no hay color de relleno especificado pero relleno es true,
-            // puedes decidir si quieres dibujar el borde o no.
-            // Siguiendo la lógica de tus otras figuras, si colorDeRelleno es null
-            // y relleno es true, solo se rellena (con el color actual, que ya se estableció).
-            // Si quieres el borde, descomenta la siguiente línea:
-            // g2.setColor(colorDePrimerPlano);
-            // g2.drawPolygon(trapecioForma);
-
+            }
 
         } else { // Si no hay relleno, solo dibujar el contorno
             g2.setColor(colorDePrimerPlano); // Usar colorDePrimerPlano (propiedad heredada)
@@ -97,31 +81,35 @@ public class Trapecio extends Figura { // Extender de Figura
         }
     }
 
-    // Los setters de color, posicion y tamaño ya no son necesarios aquí
-    // porque la clase Figura ya tiene setColorDePrimerPlano, setColorDeRelleno y setRelleno,
-    // y la posición y tamaño se manejan a través de puntoInicial y puntoActual
-    // y el método actualizar. Si necesitas acceder a estos valores, puedes añadir getters.
-
     @Override
     public FiguraData getFiguraData() {
         FiguraData data = new FiguraData("Trapecio");
-        data.setPuntoInicial(this.puntoInicial);
-        data.setPuntoFinal(this.puntoFinal); // Para rectángulos, puntoInicial y puntoFinal definen el tamaño/posición
+        data.setPuntoInicial(this.getPunto(0));
+        data.setPuntoFinal(this.getPunto(1));
         data.setColorDePrimerPlano(this.colorDePrimerPlano);
         data.setColorDeRelleno(this.colorDeRelleno);
         data.setEstaRelleno(this.relleno);
-        // No tiene sentido para Rectangulo setear centro, puntosTrazo o tamanoBorrador
         return data;
     }
 
-    // Implementación de contains para Rectángulo (más precisa)
     @Override
     public boolean contains(Point p) {
-        int x = Math.min(puntoInicial.x, puntoFinal.x);
-        int y = Math.min(puntoInicial.y, puntoFinal.y);
-        int width = Math.abs(puntoFinal.x - puntoInicial.x);
-        int height = Math.abs(puntoFinal.y - puntoInicial.y);
+        int x = Math.min(getPunto(0).x, getPunto(1).x);
+        int y = Math.min(getPunto(0).y, getPunto(1).y);
+        int width = Math.abs(getPunto(1).x - getPunto(0).x);
+        int height = Math.abs(getPunto(1).y - getPunto(0).y);
         // Crear un rectángulo Java y verificar si contiene el punto
         return new java.awt.Rectangle(x, y, width, height).contains(p);
+    }
+
+    @Override
+    public Rectangle getBounds() {
+        if (puntos.size() < 2) return null;
+
+        int x = Math.min(getPunto(0).x, getPunto(1).x);
+        int y = Math.min(getPunto(0).y, getPunto(1).y);
+        int width = Math.abs(getPunto(1).x - getPunto(0).x);
+        int height = Math.abs(getPunto(1).y - getPunto(0).y);
+        return new Rectangle(x, y, width, height);
     }
 }

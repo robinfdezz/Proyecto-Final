@@ -1,22 +1,26 @@
 package figuras;
 
 import java.awt.*;
+
+
 /**
  * Representa una forma de círculo.
  * Puede ser dibujado con un contorno y rellenado con un color separado.
  */
 public class Circulo extends Figura {
-    // Usamos puntoInicial como centro y puntoFinal como punto en el radio
-    // protected Point puntoInicial; // Heredado de Figura, representa el centro
-    // protected Point puntoFinal;   // Heredado de Figura, representa un punto en el radio
+
+    private Color colorDePrimerLano;
+
+    public Color getColorDePrimerLano() {
+        return colorDePrimerLano;
+    }
 
     /**
      * Constructor de un Círculo con un punto central dado.
      * @param centro El punto central inicial del círculo.
      */
     public Circulo(Point centro) {
-        this.puntoInicial = centro; // Usamos puntoInicial como centro
-        this.puntoFinal = new Point(centro); // Inicialmente, puntoFinal es el mismo que el centro
+        super(centro, new Point(centro)); // puntoInicial = centro, puntoFinal = centro
     }
 
     /**
@@ -25,7 +29,7 @@ public class Circulo extends Figura {
      */
     @Override
     public void actualizar(Point puntoActual) {
-        this.puntoFinal = puntoActual; // Usamos puntoFinal como punto en el radio
+        setPunto(1, puntoActual); // Actualizar puntoFinal
     }
 
     /**
@@ -37,11 +41,11 @@ public class Circulo extends Figura {
     public void dibujar(Graphics g) {
         Graphics2D g2d = (Graphics2D) g;
 
-        int radio = (int) puntoInicial.distance(puntoFinal); // Calcular el radio
+        int radio = (int) getPunto(0).distance(getPunto(1)); // Calcular el radio
         int diametro = radio * 2;
 
-        int x = puntoInicial.x - radio; // Calcular la coordenada 'x' superior izquierda del cuadro delimitador.
-        int y = puntoInicial.y - radio; // Calcular la coordenada y superior izquierda del cuadro delimitador.
+        int x = getPunto(0).x - radio; // Calcular la coordenada 'x' superior izquierda del cuadro delimitador.
+        int y = getPunto(0).y - radio; // Calcular la coordenada y superior izquierda del cuadro delimitador.
 
         if (relleno) { // Verificar si el relleno está habilitado.
             if (colorDeRelleno != null) {
@@ -55,7 +59,7 @@ public class Circulo extends Figura {
                 g2d.drawOval(x, y, diametro, diametro); // Dibujar el contorno del óvalo.
             }
         } else {
-            g2d.setColor(getColorDePrimerLano()); // Usar colorDePrimerLano heredado
+            g2d.setColor(colorDePrimerLano); // Usar colorDePrimerLano heredado
             g2d.drawOval(x, y, diametro, diametro); // Si no hay relleno, solo dibujar el contorno del óvalo.
         }
     }
@@ -67,12 +71,12 @@ public class Circulo extends Figura {
     @Override
     public FiguraData getFiguraData() {
         FiguraData data = new FiguraData("Círculo"); // Tipo correcto
-        data.setPuntoInicial(this.puntoInicial); // Centro (según cómo lo uses)
-        data.setPuntoFinal(this.puntoFinal); // Punto en el radio (para recrear el radio)
-        data.setCentro(this.puntoInicial); // Opcional: guardar el centro explícitamente en 'centro' de FiguraData también.
-        data.setColorDePrimerPlano(this.getColorDePrimerLano()); // Usar colorDePrimerLano heredado
-        data.setColorDeRelleno(this.getColorDeRelleno());
-        data.setEstaRelleno(this.isRelleno());
+        data.setPuntoInicial(this.getPunto(0)); // Centro (según cómo lo uses)
+        data.setPuntoFinal(this.getPunto(1)); // Punto en el radio (para recrear el radio)
+        data.setCentro(this.getPunto(0)); // Opcional: guardar el centro explícitamente en 'centro' de FiguraData también.
+        data.setColorDePrimerPlano(this.colorDePrimerLano); // Usar colorDePrimerLano heredado
+        data.setColorDeRelleno(this.colorDeRelleno);
+        data.setEstaRelleno(this.relleno);
         // No tiene sentido para Círculo setear puntosTrazo o tamanoBorrador
         return data;
     }
@@ -84,42 +88,37 @@ public class Circulo extends Figura {
      */
     @Override
     public boolean contains(Point p) {
-        if (puntoInicial == null || puntoFinal == null || p == null) {
+        if (getPunto(0) == null || getPunto(1) == null || p == null) {
             return false;
         }
-        int radio = (int) puntoInicial.distance(puntoFinal);
+        int radio = (int) getPunto(0).distance(getPunto(1));
         // Verificar si la distancia del punto al centro es menor o igual al radio
-        return puntoInicial.distance(p) <= radio;
+        return getPunto(0).distance(p) <= radio;
     }
 
     /**
      * Obtiene el rectángulo delimitador (bounding box) del círculo.
+     *
      * @return Un objeto Rectangle que representa el área delimitador del círculo.
      */
     @Override
     public Rectangle getBounds() {
-        if (puntoInicial != null && puntoFinal != null) {
-            int radio = (int) puntoInicial.distance(puntoFinal);
-            int x = puntoInicial.x - radio;
-            int y = puntoInicial.y - radio;
-            int diametro = radio * 2;
-            return new Rectangle(x, y, diametro, diametro);
-        }
-        return null;
+        if (puntos.size() < 2) return null;
+
+        int radio = (int) getPunto(0).distance(getPunto(1));
+        int x = getPunto(0).x - radio;
+        int y = getPunto(0).y - radio;
+        int diametro = radio * 2;
+        return new Rectangle(x, y, diametro, diametro);
     }
 
-    /**
-     * Traslada la posición del círculo por un desplazamiento dado.
-     * Mueve tanto el punto central como el punto que define el radio.
-     * @param offset El desplazamiento (dx, dy) a aplicar.
-     */
     @Override
     public void translate(Point offset) {
-        if (puntoInicial != null) { // Mover el centro
-            puntoInicial.translate(offset.x, offset.y);
+        if (getPunto(0) != null) { // Mover el centro
+            getPunto(0).translate(offset.x, offset.y);
         }
-        if (puntoFinal != null) { // Mover el punto que define el radio
-            puntoFinal.translate(offset.x, offset.y);
+        if (getPunto(1) != null) { // Mover el punto que define el radio
+            getPunto(1).translate(offset.x, offset.y);
         }
     }
 }

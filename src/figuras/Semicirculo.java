@@ -6,22 +6,15 @@ import java.awt.geom.Arc2D;
 /**
  * Representa una forma de semicírculo que puede ser dibujada y rellenada.
  * Extiende la clase abstracta Figura.
- * @author ebenezer
  */
 public class Semicirculo extends Figura {
-    // puntoInicial y puntoFinal son heredados de Figura.
-    // La clase usaba una variable local puntoActual para el dibujo.
-    // private Point puntoInicial; // Heredado de Figura
-    // private Point puntoActual; // Variable local usada en el código original
 
     /**
      * Constructor de un Semicirculo con un punto inicial.
      * @param puntoInicial El punto donde se inicia el dibujo del semicírculo.
      */
     public Semicirculo(Point puntoInicial) {
-        this.puntoInicial = puntoInicial; // Inicializa el puntoInicial heredado
-        this.puntoFinal = new Point(puntoInicial); // --- CORRECCIÓN: Inicializa el puntoFinal heredado ---
-        // Los colores y el estado de relleno se heredarán de Figura.
+        super(puntoInicial, new Point(puntoInicial));
     }
 
     /**
@@ -31,7 +24,7 @@ public class Semicirculo extends Figura {
      */
     @Override
     public void actualizar(Point puntoActual) {
-        this.puntoFinal = puntoActual; // --- CORRECCIÓN: Actualiza el puntoFinal heredado ---
+        setPunto(1, puntoActual);
     }
 
     /**
@@ -43,13 +36,13 @@ public class Semicirculo extends Figura {
     @Override
     public void dibujar(Graphics g) {
         Graphics2D g2 = (Graphics2D) g;
-        g2.setColor(getColorDePrimerLano()); // Usa el color heredado de Figura
+        g2.setColor(colorDePrimerPlano); // Usa el color heredado de Figura
 
         // Calcular la posición y tamaño del semicírculo basado en puntoInicial y puntoFinal heredados.
-        int x = Math.min(puntoInicial.x, puntoFinal.x);
-        int y = Math.min(puntoInicial.y, puntoFinal.y);
-        int width = Math.abs(puntoFinal.x - puntoInicial.x);
-        int height = Math.abs(puntoFinal.y - puntoInicial.y);
+        int x = Math.min(getPunto(0).x, getPunto(1).x);
+        int y = Math.min(getPunto(0).y, getPunto(1).y);
+        int width = Math.abs(getPunto(1).x - getPunto(0).x);
+        int height = Math.abs(getPunto(1).y - getPunto(0).y);
 
         // Asegurarse de que haya un tamaño mínimo
         if (width <= 0 || height <= 0) {
@@ -59,7 +52,7 @@ public class Semicirculo extends Figura {
         // Determinar la dirección del semicírculo basado en la dirección del arrastre vertical
         // Si puntoFinal.y es menor que puntoInicial.y, dibujamos la mitad superior (ángulo de inicio 180)
         // Si puntoFinal.y es mayor o igual que puntoInicial.y, dibujamos la mitad inferior (ángulo de inicio 0)
-        int startAngle = (puntoFinal.y < puntoInicial.y) ? 180 : 0;
+        int startAngle = (getPunto(1).y < getPunto(0).y) ? 180 : 0;
         int extentAngle = 180; // Extensión del arco en grados (180 para medio círculo)
         int arcType = Arc2D.PIE; // Tipo de arco (PIE para incluir los radios al centro)
 
@@ -69,20 +62,20 @@ public class Semicirculo extends Figura {
         Arc2D.Double semicirculoForma = new Arc2D.Double(x, y, width, height, startAngle, extentAngle, arcType);
 
 
-        if (isRelleno()) { // Si relleno es true (usar getter heredado)
-            if (getColorDeRelleno() != null) { // Usar colorDeRelleno (getter heredado)
-                g2.setColor(getColorDeRelleno());
+        if (relleno) { // Si relleno es true (usar getter heredado)
+            if (colorDeRelleno != null) { // Usar colorDeRelleno (getter heredado)
+                g2.setColor(colorDeRelleno);
                 g2.fill(semicirculoForma); // Rellenar la forma del semicírculo
             }
 
             // Dibujar el borde si el color de relleno es diferente al de borde
-            if (getColorDeRelleno() != getColorDePrimerLano()) { // Usar getters heredados
-                g2.setColor(getColorDePrimerLano()); // Restablecer el color al color de borde
+            if (colorDeRelleno != colorDePrimerPlano && colorDeRelleno != null) { // Usar getters heredados
+                g2.setColor(colorDePrimerPlano); // Restablecer el color al color de borde
                 g2.draw(semicirculoForma); // Dibujar el contorno del semicírculo
             }
 
         } else { // Si no hay relleno, solo dibujar el contorno
-            g2.setColor(getColorDePrimerLano()); // Usar colorDePrimerLano (getter heredado)
+            g2.setColor(colorDePrimerPlano); // Usar colorDePrimerLano (getter heredado)
             g2.draw(semicirculoForma); // Dibujar el contorno del semicírculo
         }
     }
@@ -94,11 +87,11 @@ public class Semicirculo extends Figura {
     @Override
     public FiguraData getFiguraData() {
         FiguraData data = new FiguraData("Semicirculo"); // Tipo correcto
-        data.setPuntoInicial(this.puntoInicial); // Esquina superior izquierda del bounding box inicial
-        data.setPuntoFinal(this.puntoFinal); // Esquina opuesta del bounding box
-        data.setColorDePrimerPlano(this.getColorDePrimerLano()); // Usar colorDePrimerLano heredado
-        data.setColorDeRelleno(this.getColorDeRelleno());
-        data.setEstaRelleno(this.isRelleno());
+        data.setPuntoInicial(this.getPunto(0)); // Esquina superior izquierda del bounding box inicial
+        data.setPuntoFinal(this.getPunto(1)); // Esquina opuesta del bounding box
+        data.setColorDePrimerPlano(this.colorDePrimerPlano); // Usar colorDePrimerLano heredado
+        data.setColorDeRelleno(this.colorDeRelleno);
+        data.setEstaRelleno(this.relleno);
         // No tiene sentido para Semicirculo setear centro, puntosTrazo o tamanoBorrador
         return data;
     }
@@ -115,20 +108,20 @@ public class Semicirculo extends Figura {
         // similar a cómo se dibuja, para una detección precisa.
         // El código original copiado de Rectangulo NO es correcto para un semicírculo.
 
-        if (puntoInicial == null || puntoFinal == null || p == null) {
+        if (getPunto(0) == null || getPunto(1) == null || p == null) {
             return false;
         }
 
-        int x = Math.min(puntoInicial.x, puntoFinal.x);
-        int y = Math.min(puntoInicial.y, puntoFinal.y);
-        int width = Math.abs(puntoFinal.x - puntoInicial.x);
-        int height = Math.abs(puntoFinal.y - puntoInicial.y);
+        int x = Math.min(getPunto(0).x, getPunto(1).x);
+        int y = Math.min(getPunto(0).y, getPunto(1).y);
+        int width = Math.abs(getPunto(1).x - getPunto(0).x);
+        int height = Math.abs(getPunto(1).y - getPunto(0).y);
 
         if (width <= 0 || height <= 0) {
             return false;
         }
 
-        int startAngle = (puntoFinal.y < puntoInicial.y) ? 180 : 0;
+        int startAngle = (getPunto(1).y < getPunto(0).y) ? 180 : 0;
         int extentAngle = 180;
         int arcType = Arc2D.PIE;
 
@@ -140,18 +133,18 @@ public class Semicirculo extends Figura {
 
     /**
      * Obtiene el rectángulo delimitador (bounding box) del semicírculo.
+     *
      * @return Un objeto Rectangle que representa el área delimitador del semicírculo.
      */
     @Override
     public Rectangle getBounds() {
-        if (puntoInicial != null && puntoFinal != null) {
-            int x = Math.min(puntoInicial.x, puntoFinal.x);
-            int y = Math.min(puntoInicial.y, puntoFinal.y);
-            int width = Math.abs(puntoFinal.x - puntoInicial.x);
-            int height = Math.abs(puntoFinal.y - puntoInicial.y);
-            return new Rectangle(x, y, width, height);
-        }
-        return null;
+        if (puntos.size() < 2) return null;
+
+        int x = Math.min(getPunto(0).x, getPunto(1).x);
+        int y = Math.min(getPunto(0).y, getPunto(1).y);
+        int width = Math.abs(getPunto(1).x - getPunto(0).x);
+        int height = Math.abs(getPunto(1).y - getPunto(0).y);
+        return new Rectangle(x, y, width, height);
     }
 
     /**
@@ -161,11 +154,11 @@ public class Semicirculo extends Figura {
      */
     @Override
     public void translate(Point offset) {
-        if (puntoInicial != null) {
-            puntoInicial.translate(offset.x, offset.y);
+        if (getPunto(0) != null) {
+            getPunto(0).translate(offset.x, offset.y);
         }
-        if (puntoFinal != null) {
-            puntoFinal.translate(offset.x, offset.y);
+        if (getPunto(1) != null) {
+            getPunto(1).translate(offset.x, offset.y);
         }
     }
 }
