@@ -11,7 +11,7 @@ import java.awt.Rectangle; // Importar Rectangle
  * Borrador no es una figura seleccionable/copiable/pegable de la misma manera que otras.
  */
 public class Borrador extends Figura {
-    private int tamano = 20; // El tamaño del pincel del borrador.
+    private int tamano = 50; // El tamaño del pincel del borrador.
     // Usamos puntoInicial como centro del borrador
     // protected Point puntoInicial; // Heredado de Figura, representa el centro
 

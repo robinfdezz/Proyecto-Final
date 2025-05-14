@@ -1,7 +1,6 @@
 package figuras;
 
-import java.awt.Graphics;
-import java.awt.Point;
+import java.awt.*;
 
 /**
  * Representa una forma de óvalo (elipse).
@@ -81,5 +80,14 @@ public class Ovalo extends Figura {
         int height = Math.abs(puntoFinal.y - puntoInicial.y);
         // Crear un rectángulo Java y verificar si contiene el punto
         return new java.awt.Rectangle(x, y, width, height).contains(p);
+    }
+
+@Override
+    public Rectangle getBounds() {
+        int x = Math.min(puntoInicial.x, puntoFinal.x);
+        int y = Math.min(puntoInicial.y, puntoFinal.y);
+        int width = Math.abs(puntoFinal.x - puntoInicial.x);
+        int height = Math.abs(puntoFinal.y - puntoInicial.y);
+        return new java.awt.Rectangle(x, y, width, height);
     }
 }

@@ -5,9 +5,8 @@
 package figuras;
 
 import java.awt.*;
-import java.awt.geom.Ellipse2D; // Usaremos Ellipse2D para una detección de contains más precisa
 
-import static com.sun.org.apache.xerces.internal.util.DOMUtil.getParent;
+//import static com.sun.org.apache.xerces.internal.util.DOMUtil.getParent;
 
 /**
  * Representa una forma de anillo (dos círculos concéntricos).

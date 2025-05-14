@@ -48,7 +48,7 @@ public class Flecha extends Figura {
             int dy = fin.y - inicio.y; // Diferencia en coordenadas y.
             double angulo = Math.atan2(dy, dx); // Calcular el ángulo de la flecha.
 
-            int longitud = (int) inicio.distance(fin); // Calcular la longitud de la línea de la flecha.
+            //int longitud = (int) inicio.distance(fin); // Calcular la longitud de la línea de la flecha.
 
             // Puntos para la línea del cuerpo de la flecha
             int x1 = inicio.x;
@@ -59,7 +59,7 @@ public class Flecha extends Figura {
             g.drawLine(x1, y1, x2, y2); // Dibujar la línea principal de la flecha.
 
             // Tamaño de la cabeza de flecha
-            int size = 10; // Tamaño de la punta de la flecha.
+            int size = 30; // Tamaño de la punta de la flecha.
 
             // Cálculo de los dos puntos de la cabeza de la flecha
             int x3 = x2 - (int) (size * Math.cos(angulo - Math.PI / 6)); // Calcular coordenada x para un punto de la punta de flecha.

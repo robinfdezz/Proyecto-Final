@@ -2,18 +2,14 @@ package paint202510;
 
 import java.awt.Component;
 import java.awt.Font;
-import java.awt.Color;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import javax.swing.ButtonGroup;
 import javax.swing.JToolBar;
 import javax.swing.JToggleButton;
 import javax.swing.JButton;
-import javax.swing.JColorChooser;
 import javax.swing.SwingConstants;
 import javax.swing.ImageIcon;
-import javax.swing.JCheckBox;
-import javax.swing.JToolBar.Separator;
 import javax.swing.AbstractButton;
 
 /**
@@ -88,6 +84,9 @@ public class BarraDeHerramientas extends JToolBar{
         btnLimpiar = new JButton("Limpiar");
 
         // Formatear y agregar botones de acción primero
+        // Añadir otro separador visual antes del botón Guardar
+        //add(new Separator());
+        formatearYAgregar(btnGuardar, "guardar.png", "Guardar Imagen", false);
         formatearYAgregar(btnDeshacer, "deshacer.png", "Deshacer última acción", false);
         formatearYAgregar(btnRehacer, "rehacer.png", "Rehacer última acción deshecha", false);
         formatearYAgregar(btnLimpiar, "limpiar.png", "Limpiar todo el lienzo", false);
@@ -117,9 +116,7 @@ public class BarraDeHerramientas extends JToolBar{
         formatearYAgregar(btnRing, "ring.png", "Ring", true);
 
 
-        // Añadir otro separador visual antes del botón Guardar
-        add(new Separator());
-        formatearYAgregar(btnGuardar, "guardar.png", "Guardar Imagen", false);
+        
 
 
         // Configurar el ButtonGroup para los JToggleButtons (todas las herramientas)

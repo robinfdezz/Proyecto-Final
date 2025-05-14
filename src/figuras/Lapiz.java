@@ -27,7 +27,7 @@ import java.util.List;
 public class Lapiz extends Figura{
     private List<Point> puntos; // Lista de puntos que forman el trazo.
     private Color color; // Color del trazo del lápiz (local a esta clase).
-    private int grosor; // Grosor del trazo (no implementado en dibujar con drawLine).
+    //private int grosor; // Grosor del trazo (no implementado en dibujar con drawLine).
 
     // Constructor - Recibe el color y grosor (aunque grosor no se usa en dibujar)
     // Nota: Este constructor no recibe un punto inicial como otras figuras.
@@ -42,7 +42,7 @@ public class Lapiz extends Figura{
     public Lapiz(Color color, int grosor) {
         this.puntos = new ArrayList<>(); // Inicializar la lista de puntos.
         this.color = color; // Establecer el color local.
-        this.grosor = grosor;
+        //this.grosor = grosor;
         // Nota: colorDePrimerPlano de la clase base Figura no se usa en esta clase.
     }
 

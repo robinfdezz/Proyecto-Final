@@ -2,8 +2,6 @@ package figuras;
 
 import java.awt.*;
 import java.awt.geom.Arc2D;
-import java.awt.geom.Path2D; // Asegúrate de importar Path2D si se usa en contains
-import java.awt.geom.Rectangle2D; // Importar Rectangle2D para contains
 
 /**
  * Representa una forma de semicírculo que puede ser dibujada y rellenada.

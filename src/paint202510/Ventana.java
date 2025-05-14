@@ -15,7 +15,7 @@ import javax.swing.*;
 // Importaciones necesarias para copiar y pegar
 import java.awt.Toolkit;
 import java.awt.datatransfer.Clipboard;
-import java.awt.datatransfer.DataFlavor;
+//import java.awt.datatransfer.DataFlavor;
 import java.awt.datatransfer.Transferable;
 import java.awt.datatransfer.UnsupportedFlavorException;
 import java.awt.Point; // Necesario para ajustar la posición al pegar
@@ -63,7 +63,7 @@ public class Ventana extends JFrame {
         initComponents(); // Inicializa componentes generados por el diseñador de formularios (si hay alguno).
 
         // Configurar el título de la ventana
-        setTitle("Mi Paint 202510");
+        setTitle("Paint202510");
 
         // Crear instancias de los paneles principales en el orden correcto
         barraDeHerramientas = new BarraDeHerramientas();

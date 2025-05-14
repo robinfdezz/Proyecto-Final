@@ -188,8 +188,9 @@ public class PanelDeColores extends JPanel {
         // El listener para el botón de selección se ha movido a BarraDeHerramientas
 
         // Añadir componentes al panel.
-        add(botonColorBorde);
-        formatearYAgregar(botonColorRelleno, "relleno.png", "Cubeta de pintura", false);
+        //add(botonColorBorde);
+        formatearYAgregar(botonColorBorde, "borde.png", "Color de borde", false);
+        formatearYAgregar(botonColorRelleno, "relleno.png", "Color de relleno", false);
         add(checkRellenar);
         formatearYAgregar(botonInformacion, "informacion.png", "Infotmacion", false);
         formatearYAgregar(botonCargar, "subirImagen.png", "Cargar Imagen", false);

@@ -1,8 +1,6 @@
 package figuras;
 
 import java.awt.*;
-import java.awt.geom.Ellipse2D; // Importar Ellipse2D para contains
-
 /**
  * Representa una forma de círculo.
  * Puede ser dibujado con un contorno y rellenado con un color separado.

@@ -1,7 +1,6 @@
 package figuras;
 
-import java.awt.Graphics;
-import java.awt.Point;
+import java.awt.*;
 
 /**
  * Representa una forma de triángulo.
@@ -39,7 +38,8 @@ public class Triangulo extends Figura {
      * Dibuja un polígono relleno si 'relleno' es true, y un contorno de polígono.
      * @param g El objeto Graphics sobre el que dibujar.
      */
-    @Override
+
+@Override
     public void dibujar(Graphics g) {
         g.setColor(colorDePrimerPlano); // Establecer el color para el contorno.
 
@@ -93,5 +93,14 @@ public class Triangulo extends Figura {
         int height = Math.abs(puntoFinal.y - puntoInicial.y);
         // Crear un rectángulo Java y verificar si contiene el punto
         return new java.awt.Rectangle(x, y, width, height).contains(p);
+    }
+
+@Override
+    public Rectangle getBounds() {
+        int x = Math.min(puntoInicial.x, puntoFinal.x);
+        int y = Math.min(puntoInicial.y, puntoFinal.y);
+        int width = Math.abs(puntoFinal.x - puntoInicial.x);
+        int height = Math.abs(puntoFinal.y - puntoInicial.y);
+        return new java.awt.Rectangle(x, y, width, height);
     }
 }
