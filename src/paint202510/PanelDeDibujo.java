@@ -12,7 +12,6 @@ import java.util.List;
 import java.util.Stack;
 import java.awt.image.BufferedImage;
 
-
 /**
  * Clase PanelDeDibujo - Representa el lienzo de dibujo donde se dibujan las figuras.
  * Maneja los eventos del ratón para crear y modificar figuras y gestiona la lista de figuras.
@@ -56,6 +55,17 @@ public class PanelDeDibujo extends JPanel {
             public void mousePressed(MouseEvent e) {
                 // Obtener la herramienta seleccionada de la barra de herramientas
                 String herramienta = barraDeHerramientas.getHerramientaSeleccionada();
+
+                // --- Lógica de la Lata de Pintura ---
+                if ("Lata de Pintura".equals(herramienta)) {
+                    Figura figuraClickeada = getFiguraEnPunto(e.getPoint());
+                    if (figuraClickeada != null) {
+                        figuraClickeada.setColorDeRelleno(panelDeColores.getColorRellenoActual());
+                        figuraClickeada.setRelleno(panelDeColores.isRellenar()); // Usar el estado de la casilla
+                        repaint();
+                    }
+                    return; // ¡MUY IMPORTANTE! No crear una nueva figura
+                }
 
                 // --- Lógica de Selección ---
                 if ("Seleccionar Figura".equals(herramienta)) {

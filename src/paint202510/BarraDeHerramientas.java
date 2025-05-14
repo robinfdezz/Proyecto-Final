@@ -19,6 +19,8 @@ import javax.swing.AbstractButton;
 public class BarraDeHerramientas extends JToolBar{
 
     // JToggleButtons para las herramientas de dibujo y selección
+    protected JToggleButton btnLataPintura;
+
     protected JToggleButton btnBorrador;
     protected JToggleButton btnLapiz;
     protected JToggleButton btnLinea;
@@ -54,6 +56,9 @@ public class BarraDeHerramientas extends JToolBar{
         setOrientation(JToolBar.VERTICAL);
 
         // Inicialización de los botones de figura (JToggleButtons)
+        // ... (inicialización de otros botones)
+        btnLataPintura = new JToggleButton("Lata"); // Acortado para que quepa mejor
+        
         btnLapiz = new JToggleButton("Lapiz");
         btnLinea = new JToggleButton("Linea");
         btnRectangulo = new JToggleButton("Rectangulo");
@@ -93,6 +98,7 @@ public class BarraDeHerramientas extends JToolBar{
         formatearYAgregar(btnSeleccionar, "seleccion.png", "Seleccionar Figura", true);
         formatearYAgregar(btnBorrador, "borrador.png", "Borrador", true);
 
+        formatearYAgregar(btnLataPintura, "lata_pintura.png", "Lata de Pintura", true);
         // Añadir un separador visual
         add(new Separator());
 
@@ -140,6 +146,8 @@ public class BarraDeHerramientas extends JToolBar{
         grupoBotones.add(btnSemicirculo);
         grupoBotones.add(btnRing);
         grupoBotones.add(btnBorrador);
+        grupoBotones.add(btnLataPintura);
+
 
 
         // --- Listeners para los botones de herramienta (JToggleButtons) ---
@@ -180,6 +188,7 @@ public class BarraDeHerramientas extends JToolBar{
         btnSemicirculo.addActionListener(herramientaButtonListener);
         btnRing.addActionListener(herramientaButtonListener);
         btnBorrador.addActionListener(herramientaButtonListener);
+        btnLataPintura.addActionListener(herramientaButtonListener);
 
 
         // --- Listeners para los botones de acción (JButtons) ---
