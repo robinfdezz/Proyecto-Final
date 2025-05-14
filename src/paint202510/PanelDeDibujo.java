@@ -5,12 +5,15 @@ import figuras.*;
 import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+
+import javax.imageio.ImageIO;
 import javax.swing.JPanel;
 import java.util.ArrayList;
 import java.util.Collections; // Importar Collections para invertir la lista
 import java.util.List;
 import java.util.Stack;
 import java.awt.image.BufferedImage;
+import java.io.IOException;
 
 /**
  * Clase PanelDeDibujo - Representa el lienzo de dibujo donde se dibujan las figuras.
@@ -18,7 +21,7 @@ import java.awt.image.BufferedImage;
  * Incluye funcionalidad para Undo, Redo, y Clear. Ahora soporta las figuras Corazon y Trapecio.
  * Se ha añadido lógica básica para seleccionar figuras.
  */
-public class PanelDeDibujo extends JPanel {
+public class PanelDeDibujo extends JPanel implements HerramientaSeleccionadaListener{
     private Figura figuraActual; // La figura que se está dibujando o modificando actualmente.
     private List<Figura> figuras = new ArrayList<>(); // Lista para almacenar todas las figuras dibujadas.
     private Stack<Figura> figurasDeshechas = new Stack<>(); // Pila para almacenar figuras deshechas para la funcionalidad de rehacer.
@@ -26,7 +29,12 @@ public class PanelDeDibujo extends JPanel {
     BarraDeHerramientas barraDeHerramientas; // Referencia a la barra de herramientas para obtener la herramienta seleccionada.
     private BufferedImage imagenDeFondo; // Imagen de fondo para el lienzo.
 
-    private Figura figuraSeleccionada = null; // Variable para mantener la figura seleccionada
+    private Figura figuraSeleccionada = null; // Variable para mantener la figura seleccionada1
+
+    private Cursor cursorDibujoGeneral;
+    private Cursor cursorBorrador;
+    private Cursor cursorLataPintura;
+    private Cursor cursorSeleccionar;
 
     /**
      * Constructor del panel de dibujo.
@@ -38,6 +46,73 @@ public class PanelDeDibujo extends JPanel {
         this.panelDeColores = panelDeColores;
         configurarEventosRaton(); // Configurar los listeners de eventos del ratón.
         setBackground(Color.WHITE); // Establecer el color de fondo del panel.
+
+        // Inicializar los cursores
+        try {
+            BufferedImage dibujoGeneralImage = ImageIO.read(getClass().getResource("/iconos/cruz.png"));
+            BufferedImage borradorImage = ImageIO.read(getClass().getResource("/iconos/borrador2.png"));
+            BufferedImage lataPinturaImage = ImageIO.read(getClass().getResource("/iconos/lata_pintura2.png"));
+            BufferedImage seleccionarImage = ImageIO.read(getClass().getResource("/iconos/seleccion2.png"));
+
+            cursorDibujoGeneral = Toolkit.getDefaultToolkit().createCustomCursor(dibujoGeneralImage, new Point(16, 16), "cursorDibujoGeneral");
+            cursorBorrador = Toolkit.getDefaultToolkit().createCustomCursor(borradorImage, new Point(8, 8), "cursorBorrador");
+            cursorLataPintura = Toolkit.getDefaultToolkit().createCustomCursor(lataPinturaImage, new Point(0, 24), "cursorLataPintura");
+            cursorSeleccionar = Toolkit.getDefaultToolkit().createCustomCursor(seleccionarImage, new Point(0, 0), "cursorSeleccionar");
+
+        } catch (IOException e) {
+            System.err.println("Error al cargar las imágenes de los cursores: " + e.getMessage());
+            // Cursores por defecto como respaldo
+            cursorDibujoGeneral = Cursor.getDefaultCursor();
+            cursorBorrador = Cursor.getDefaultCursor();
+            cursorLataPintura = Cursor.getDefaultCursor();
+            cursorSeleccionar = Cursor.getDefaultCursor();
+        }
+
+        barraDeHerramientas.setHerramientaSeleccionadaListener(this); // Registrarse como listener - NUEVO
+
+    }
+
+        // --- Implementación del listener ---
+    @Override
+    public void herramientaSeleccionadaCambio(String nuevaHerramienta) { // NUEVO
+        actualizarCursor(nuevaHerramienta); // NUEVO
+    }
+
+    private void actualizarCursor(String herramienta) { // NUEVO
+        switch (herramienta) {
+            case "Lata de Pintura":
+                setCursor(cursorLataPintura);
+                break;
+            case "Seleccionar Figura":
+                setCursor(cursorSeleccionar);
+                break;
+            case "Borrador":
+                setCursor(cursorBorrador);
+                break;
+            case "Línea":
+            case "Rectángulo":
+            case "Óvalo":
+            case "Círculo":
+            case "Cuadrado":
+            case "Triángulo":
+            case "Pentágono":
+            case "Rombo":
+            case "Heptagono":
+            case "Octagono":
+            case "Estrella":
+            case "Flecha":
+            case "Corazón":
+            case "Trapecio":
+            case "Semicirculo":
+            case "Ring":
+            case "Lapiz":
+            case "Dibujo Libre":
+                setCursor(cursorDibujoGeneral);
+                break;
+            default:
+                setCursor(Cursor.getDefaultCursor());
+                break;
+        }
     }
 
     /**

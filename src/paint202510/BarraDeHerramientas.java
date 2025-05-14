@@ -49,6 +49,7 @@ public class BarraDeHerramientas extends JToolBar{
     protected JButton btnLimpiar;
 
     private ButtonGroup grupoBotones;
+    private HerramientaSeleccionadaListener herramientaSeleccionadaListener; // NUEVO
 
     private PanelDeColores panelDeColores; // Referencia a PanelDeColores
 
@@ -158,6 +159,9 @@ public class BarraDeHerramientas extends JToolBar{
                 JToggleButton sourceButton = (JToggleButton) e.getSource();
                 if (sourceButton.isSelected()) {
                     // Deseleccionar la figura en el panel de dibujo al cambiar a cualquier herramienta
+                    if (sourceButton.isSelected()) {
+                    notificarCambioDeHerramienta(); // NUEVO
+                }
                     if (panelDeColores != null && panelDeColores.getPanelDeDibujo() != null) {
                         panelDeColores.getPanelDeDibujo().deseleccionarFigura();
                         panelDeColores.getPanelDeDibujo().repaint(); // Repintar para ocultar el borde de selección
@@ -213,6 +217,18 @@ public class BarraDeHerramientas extends JToolBar{
 
     }
 
+    // --- NUEVOS MÉTODOS ---
+    public void setHerramientaSeleccionadaListener(HerramientaSeleccionadaListener listener) {
+        this.herramientaSeleccionadaListener = listener;
+    }
+
+    private void notificarCambioDeHerramienta() {
+        if (herramientaSeleccionadaListener != null) {
+            herramientaSeleccionadaListener.herramientaSeleccionadaCambio(getHerramientaSeleccionada());
+        }
+    }
+
+    
     // Método formatearYAgregar actualizado
     private void formatearYAgregar(AbstractButton boton, String nombreIcono, String tooltip, boolean esHerramienta) {
         boton.setFocusable(false);
