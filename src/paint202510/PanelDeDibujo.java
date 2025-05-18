@@ -41,6 +41,8 @@ public class PanelDeDibujo extends JPanel implements HerramientaSeleccionadaList
     private Cursor cursorBorrador;
     private Cursor cursorLataPintura;
     private Cursor cursorSeleccionar;
+    private Cursor cursorEliminar;
+
     // Añadir esta variable como miembro de la clase PanelDeDibujo
     private Point puntoInicialArrastre = null;
     private int grosor = 1; // Nuevo: Grosor de la línea (valor predeterminado)
@@ -72,6 +74,8 @@ public class PanelDeDibujo extends JPanel implements HerramientaSeleccionadaList
                     "cursorLataPintura");
             cursorSeleccionar = Toolkit.getDefaultToolkit().createCustomCursor(seleccionarImage, new Point(16, 16),
                     "cursorSeleccionar");
+            cursorEliminar = Toolkit.getDefaultToolkit().createCustomCursor(seleccionarImage, new Point(16, 16),
+                    "cursorSeleccionar");
 
         } catch (IOException e) {
             System.err.println("Error al cargar las imágenes de los cursores: " + e.getMessage());
@@ -80,6 +84,7 @@ public class PanelDeDibujo extends JPanel implements HerramientaSeleccionadaList
             cursorBorrador = Cursor.getDefaultCursor();
             cursorLataPintura = Cursor.getDefaultCursor();
             cursorSeleccionar = Cursor.getDefaultCursor();
+            cursorEliminar = Cursor.getDefaultCursor(); // Cursores por defecto como respaldo
         }
 
         barraDeHerramientas.setHerramientaSeleccionadaListener(this); // Registrarse como listener - NUEVO
@@ -99,6 +104,9 @@ public class PanelDeDibujo extends JPanel implements HerramientaSeleccionadaList
                 break;
             case "Seleccionar Figura":
                 setCursor(cursorSeleccionar);
+                break;
+            case "Eliminar Figura":
+            setCursor(cursorSeleccionar);
                 break;
             case "Borrador":
                 setCursor(cursorBorrador);
@@ -177,6 +185,17 @@ public class PanelDeDibujo extends JPanel implements HerramientaSeleccionadaList
                     repaint();
                     return;
                 }
+
+                // *** NUEVA LÓGICA PARA ELIMINAR FIGURA ***
+            if ("Eliminar Figura".equals(herramienta)) {
+                Figura figuraClickeada = getFiguraEnPunto(e.getPoint());
+                if (figuraClickeada != null) {
+                    figuras.remove(figuraClickeada); // Eliminar la figura de la lista
+                    figurasDeshechas.clear(); // Limpiar el rehacer, ya que se modifica la lista
+                    repaint(); // Repintar para mostrar el cambio
+                }
+                return; // ¡IMPORTANTE! No crear una nueva figura
+            }
 
                 // --- Fin Lógica de Selección ---
 

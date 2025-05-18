@@ -39,7 +39,9 @@ public class BarraDeHerramientas extends JToolBar{
     protected JToggleButton btnTrapecio;
     protected JToggleButton btnSemicirculo;
     protected JToggleButton btnRing;
-    protected JToggleButton btnSeleccionar; // Botón para la herramienta de selección
+    protected JToggleButton btnSeleccionar;
+    protected JToggleButton btnEliminar;
+
 
 
     // JButtons para acciones
@@ -81,6 +83,7 @@ public class BarraDeHerramientas extends JToolBar{
 
         // Inicialización del botón de selección (JToggleButton)
         btnSeleccionar = new JToggleButton("Seleccionar Figura");
+        btnEliminar = new JToggleButton("Eliminar Figura");
 
 
         // Inicialización de los botones de acción (JButtons)
@@ -97,6 +100,7 @@ public class BarraDeHerramientas extends JToolBar{
         formatearYAgregar(btnRehacer, "rehacer.png", "Rehacer última acción deshecha", false);
         formatearYAgregar(btnLimpiar, "limpiar.png", "Limpiar todo el lienzo", false);
         formatearYAgregar(btnSeleccionar, "seleccion.png", "Seleccionar Figura", true);
+        formatearYAgregar(btnEliminar, "borrar_figura.png", "Eliminar Figura", true);
         formatearYAgregar(btnBorrador, "borrador.png", "Borrador", true);
 
         formatearYAgregar(btnLataPintura, "color_figura.png", "Color de relleno", true);
@@ -128,7 +132,7 @@ public class BarraDeHerramientas extends JToolBar{
 
         // Configurar el ButtonGroup para los JToggleButtons (todas las herramientas)
         grupoBotones = new ButtonGroup();
-        grupoBotones.add(btnSeleccionar); // Añadir el botón de selección al grupo
+        grupoBotones.add(btnSeleccionar);
         grupoBotones.add(btnLapiz);
         grupoBotones.add(btnLinea);
         grupoBotones.add(btnRectangulo);
@@ -148,6 +152,8 @@ public class BarraDeHerramientas extends JToolBar{
         grupoBotones.add(btnRing);
         grupoBotones.add(btnBorrador);
         grupoBotones.add(btnLataPintura);
+        grupoBotones.add(btnEliminar);
+
 
 
 
@@ -170,6 +176,7 @@ public class BarraDeHerramientas extends JToolBar{
 
         // Añadir el mismo listener a todos los JToggleButtons
         btnSeleccionar.addActionListener(herramientaButtonListener);
+        btnEliminar.addActionListener(herramientaButtonListener);
         btnLapiz.addActionListener(herramientaButtonListener);
         btnLinea.addActionListener(herramientaButtonListener);
         btnRectangulo.addActionListener(herramientaButtonListener);
@@ -189,6 +196,8 @@ public class BarraDeHerramientas extends JToolBar{
         btnRing.addActionListener(herramientaButtonListener);
         btnBorrador.addActionListener(herramientaButtonListener);
         btnLataPintura.addActionListener(herramientaButtonListener);
+        btnEliminar.addActionListener(herramientaButtonListener);
+
 
 
         // --- Listeners para los botones de acción (JButtons) ---
