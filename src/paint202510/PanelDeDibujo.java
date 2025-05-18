@@ -37,6 +37,8 @@ public class PanelDeDibujo extends JPanel implements HerramientaSeleccionadaList
     private Cursor cursorSeleccionar;
     // Añadir esta variable como miembro de la clase PanelDeDibujo
     private Point puntoInicialArrastre = null;
+    private int grosor = 1; // Nuevo: Grosor de la línea (valor predeterminado)
+
 
     /**
      * Constructor del panel de dibujo.
@@ -54,7 +56,7 @@ public class PanelDeDibujo extends JPanel implements HerramientaSeleccionadaList
             BufferedImage dibujoGeneralImage = ImageIO.read(getClass().getResource("/iconos/cruz.png"));
             BufferedImage borradorImage = ImageIO.read(getClass().getResource("/iconos/borrador2.png"));
             BufferedImage lataPinturaImage = ImageIO.read(getClass().getResource("/iconos/lata_pintura2.png"));
-            BufferedImage seleccionarImage = ImageIO.read(getClass().getResource("/iconos/seleccion2.png"));
+            BufferedImage seleccionarImage = ImageIO.read(getClass().getResource("/iconos/seleccion4.png"));
 
             cursorDibujoGeneral = Toolkit.getDefaultToolkit().createCustomCursor(dibujoGeneralImage, new Point(16, 16), "cursorDibujoGeneral");
             cursorBorrador = Toolkit.getDefaultToolkit().createCustomCursor(borradorImage, new Point(8, 18), "cursorBorrador");
@@ -74,11 +76,21 @@ public class PanelDeDibujo extends JPanel implements HerramientaSeleccionadaList
 
     }
 
+     /**
+      * Establece el grosor de la línea para dibujar.
+      * @param grosor El grosor de la línea.
+      */
+     public void setGrosor(int grosor) {
+         this.grosor = grosor;
+     }
+
         // --- Implementación del listener para cursores---
     @Override
     public void herramientaSeleccionadaCambio(String nuevaHerramienta) { // NUEVO
         actualizarCursor(nuevaHerramienta); 
     }
+
+    
 
     private void actualizarCursor(String herramienta) {
         switch (herramienta) {
@@ -344,33 +356,36 @@ public class PanelDeDibujo extends JPanel implements HerramientaSeleccionadaList
      * cuando el componente necesita ser dibujado.
      * @param g El objeto Graphics a usar para pintar.
      */
-    @Override
-    protected void paintComponent(Graphics g) {
-        super.paintComponent(g);
+@Override
+ protected void paintComponent(Graphics g) {
+     super.paintComponent(g);
 
-        if (imagenDeFondo != null) {
-            g.drawImage(imagenDeFondo, 0, 0, this);
-        }
+     if (imagenDeFondo != null) {
+         g.drawImage(imagenDeFondo, 0, 0, this);
+     }
 
-        for (Figura figura : figuras) {
-            figura.dibujar(g);
-            // Dibujar un indicador visual si la figura está seleccionada
-            if (figura == figuraSeleccionada) {
-                g.setColor(Color.BLUE); // Color del indicador de selección
-                Graphics2D g2d = (Graphics2D) g; // Usar Graphics2D para configuraciones avanzadas
-                Stroke originalStroke = g2d.getStroke(); // Guardar el stroke original
-                g2d.setStroke(new BasicStroke(2)); // Configurar un trazo más grueso para el indicador
+     Graphics2D g2d = (Graphics2D) g; // Obtener Graphics2D para el grosor
+     g2d.setStroke(new BasicStroke(grosor)); // Establecer el grosor del trazo
 
-                Rectangle bounds = figura.getBounds(); // Obtener los límites de la figura
-                if (bounds != null) {
-                    g2d.drawRect(bounds.x - 2, bounds.y - 2, bounds.width + 4, bounds.height + 4); // Dibujar el rectángulo de selección un poco más grande
-                }
-                // Nota: Para DibujoLibre/Lapiz, necesitarías acceder a la lista de puntos y calcular el bounding box en su getBounds().
+     for (Figura figura : figuras) {
+         figura.dibujar(g2d); // Usar g2d para dibujar
+         // Dibujar un indicador visual si la figura está seleccionada
+         if (figura == figuraSeleccionada) {
+             g2d.setColor(Color.BLUE); // Color del indicador de selección - ¡Usar g2d!
+             Stroke originalStroke = g2d.getStroke(); // Guardar el stroke original
+             g2d.setStroke(new BasicStroke(2)); // Configurar un trazo más grueso para el indicador
 
-                g2d.setStroke(originalStroke); // Restaurar el stroke original
-            }
-        }
-    }
+             Rectangle bounds = figura.getBounds(); // Obtener los límites de la figura
+             if (bounds != null) {
+                 g2d.drawRect(bounds.x - 2, bounds.y - 2, bounds.width + 4, bounds.height + 4); // Dibujar el rectángulo de selección un poco más grande
+             }
+             // Nota: Para DibujoLibre/Lapiz, necesitarías acceder a la lista de puntos y calcular el bounding box en su getBounds().
+
+             g2d.setStroke(originalStroke); // Restaurar el stroke original
+         }
+     }
+     g2d.setStroke(new BasicStroke(1)); // Restablecer el grosor después de dibujar
+ }
 
     /**
      * Establece una imagen de fondo para el panel de dibujo.

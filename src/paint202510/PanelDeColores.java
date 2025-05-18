@@ -1,4 +1,5 @@
 package paint202510;
+
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.image.BufferedImage;
@@ -6,9 +7,12 @@ import java.io.File;
 import java.io.IOException;
 import javax.imageio.ImageIO;
 import javax.swing.*;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
 
 /**
- * Clase PanelDeColores - Proporciona controles para seleccionar colores y opciones de relleno,
+ * Clase PanelDeColores - Proporciona controles para seleccionar colores y
+ * opciones de relleno,
  * así como botones para mostrar información del proyecto y cargar una imagen.
  * El botón de selección ha sido movido a BarraDeHerramientas.
  */
@@ -48,9 +52,13 @@ public class PanelDeColores extends JPanel {
     private PanelDeDibujo panelDeDibujo = null;
 
     /**
-     * Referencia a la barra de herramientas para coordinar la selección de herramientas.
+     * Referencia a la barra de herramientas para coordinar la selección de
+     * herramientas.
      */
     private BarraDeHerramientas barraDeHerramientas = null; // Referencia a BarraDeHerramientas
+
+    private JSpinner grosorSpinner; // Nuevo: Spinner para el grosor
+    private int grosorActual = 1; // Nuevo: Grosor predeterminado
 
     /**
      * Constructor del panel de colores y sus componentes.
@@ -65,7 +73,6 @@ public class PanelDeColores extends JPanel {
         // El botón de selección se ha movido a BarraDeHerramientas
         // botonSeleccionar = new JToggleButton("Seleccionar Figura");
 
-
         checkRellenar = new JCheckBox("Rellenar"); // Inicializar casilla de verificación de relleno.
         checkRellenar.setSelected(false); // Establecer el estado inicial de la casilla de relleno.
 
@@ -74,8 +81,7 @@ public class PanelDeColores extends JPanel {
             Color nuevoColor = JColorChooser.showDialog(
                     PanelDeColores.this,
                     "Seleccionar Color del Borde",
-                    colorBordeActual
-            );
+                    colorBordeActual);
 
             if (nuevoColor != null) {
                 colorBordeActual = nuevoColor; // Actualizar el color de borde actual si se selecciona un nuevo color.
@@ -96,13 +102,15 @@ public class PanelDeColores extends JPanel {
             Color nuevoColor = JColorChooser.showDialog(
                     PanelDeColores.this,
                     "Seleccionar Color de Relleno",
-                    colorRellenoActual
-            );
+                    colorRellenoActual);
 
             if (nuevoColor != null) {
-                colorRellenoActual = nuevoColor; // Actualizar el color de relleno actual si se selecciona un nuevo color.
-                // Si hay una figura seleccionada y está marcada como rellena, actualizar su color de relleno
-                if (panelDeDibujo != null && panelDeDibujo.getFiguraSeleccionada() != null && panelDeDibujo.getFiguraSeleccionada().isRelleno()) {
+                colorRellenoActual = nuevoColor; // Actualizar el color de relleno actual si se selecciona un nuevo
+                                                 // color.
+                // Si hay una figura seleccionada y está marcada como rellena, actualizar su
+                // color de relleno
+                if (panelDeDibujo != null && panelDeDibujo.getFiguraSeleccionada() != null
+                        && panelDeDibujo.getFiguraSeleccionada().isRelleno()) {
                     panelDeDibujo.getFiguraSeleccionada().setColorDeRelleno(colorRellenoActual);
                     panelDeDibujo.repaint(); // Repintar para mostrar el cambio de color
                 }
@@ -120,17 +128,18 @@ public class PanelDeColores extends JPanel {
                 panelDeDibujo.getFiguraSeleccionada().setRelleno(checkRellenar.isSelected());
                 panelDeDibujo.repaint(); // Repintar para mostrar el cambio de relleno
             }
-            // Al cambiar el estado de relleno, deseleccionar el modo de selección si está activo
+            // Al cambiar el estado de relleno, deseleccionar el modo de selección si está
+            // activo
             if (barraDeHerramientas != null) {
                 barraDeHerramientas.setSeleccionarButtonState(false);
             }
         });
 
-
         // Añadir listener de acciones para el botón de información.
         botonInformacion.addActionListener((ActionEvent e) -> {
             mostrarInformacionProyecto(); // Llamar al método para mostrar información del proyecto.
-            // Al usar el botón de información, deseleccionar el modo de selección si está activo
+            // Al usar el botón de información, deseleccionar el modo de selección si está
+            // activo
             if (barraDeHerramientas != null) {
                 barraDeHerramientas.setSeleccionarButtonState(false);
             }
@@ -152,7 +161,8 @@ public class PanelDeColores extends JPanel {
                     BufferedImage loadedImage = ImageIO.read(fileToLoad);
                     if (loadedImage != null) {
                         if (panelDeDibujo != null) {
-                            panelDeDibujo.setImagenDeFondo(loadedImage); // Establecer la imagen cargada como fondo en el panel de dibujo.
+                            panelDeDibujo.setImagenDeFondo(loadedImage); // Establecer la imagen cargada como fondo en
+                                                                         // el panel de dibujo.
                             JOptionPane.showMessageDialog(PanelDeColores.this,
                                     "Imagen cargada correctamente.",
                                     "Carga Exitosa",
@@ -184,20 +194,40 @@ public class PanelDeColores extends JPanel {
                 }
             }
         });
-
         // El listener para el botón de selección se ha movido a BarraDeHerramientas
 
+        // Nuevo: Inicializar y configurar el JSpinner para el grosor
+        grosorSpinner = new JSpinner(new SpinnerNumberModel(grosorActual, 1, 20, 1)); // Valores: inicial, min, max,
+        grosorSpinner.setPreferredSize(new Dimension(50, 30)); // Ajustar tamaño
+
+        // Nuevo: Añadir un ChangeListener para capturar los cambios en el grosor
+        grosorSpinner.addChangeListener(new ChangeListener() {
+            @Override
+            public void stateChanged(ChangeEvent e) {
+                grosorActual = (Integer) grosorSpinner.getValue();
+                if (panelDeDibujo != null) {
+                    panelDeDibujo.setGrosor(grosorActual); // Pasar el grosor al PanelDeDibujo
+                }
+                // No necesitamos deseleccionar aquí, el cambio de grosor no interfiere con la
+                // selección
+            }
+        });
+
+        add(grosorSpinner); // Añadir el spinner al panel
+
+
         // Añadir componentes al panel.
-        //add(botonColorBorde);
+        // add(botonColorBorde);
         formatearYAgregar(botonColorBorde, "borde.png", "Color de borde", false);
         formatearYAgregar(botonColorRelleno, "relleno.png", "Color de relleno", false);
         add(checkRellenar);
         formatearYAgregar(botonInformacion, "informacion.png", "Infotmacion", false);
         formatearYAgregar(botonCargar, "subirImagen.png", "Cargar Imagen", false);
 
-
-        // Nota: Necesitarás añadir los botones de Copiar y Pegar aquí también en un paso posterior.
+        // Nota: Necesitarás añadir los botones de Copiar y Pegar aquí también en un
+        // paso posterior.
     }
+
     // Método formatearYAgregar modificado para incluir si es un botón de figura
     private void formatearYAgregar(AbstractButton boton, String nombreIcono, String tooltip, boolean esBotonFigura) {
         boton.setFocusable(false);
@@ -205,7 +235,6 @@ public class PanelDeColores extends JPanel {
 
         // Usar un ClientProperty para marcar si es un botón de figura
         boton.putClientProperty("esBotonFigura", esBotonFigura);
-
 
         java.net.URL ruta = getClass().getResource("/iconos/" + nombreIcono);
         if (ruta != null) {
@@ -226,9 +255,9 @@ public class PanelDeColores extends JPanel {
         add(boton);
     }
 
-
     /**
      * Establece la referencia al panel de dibujo.
+     * 
      * @param panelDeDibujo La instancia de PanelDeDibujo.
      */
     public void setPanelDeDibujo(PanelDeDibujo panelDeDibujo) {
@@ -237,21 +266,21 @@ public class PanelDeColores extends JPanel {
 
     /**
      * Obtiene la referencia al panel de dibujo.
+     * 
      * @return La instancia de PanelDeDibujo.
      */
     public PanelDeDibujo getPanelDeDibujo() {
         return panelDeDibujo;
     }
 
-
     /**
      * Establece la referencia a la barra de herramientas.
+     * 
      * @param barraDeHerramientas La instancia de BarraDeHerramientas.
      */
     public void setBarraDeHerramientas(BarraDeHerramientas barraDeHerramientas) {
         this.barraDeHerramientas = barraDeHerramientas;
     }
-
 
     /**
      * Muestra información sobre el proyecto en un cuadro de diálogo de mensaje.
@@ -280,6 +309,7 @@ public class PanelDeColores extends JPanel {
 
     /**
      * Obtiene el color de borde seleccionado actualmente.
+     * 
      * @return El color de borde actual.
      */
     public Color getColorBordeActual() {
@@ -288,6 +318,7 @@ public class PanelDeColores extends JPanel {
 
     /**
      * Obtiene el color de relleno seleccionado actualmente.
+     * 
      * @return El color de relleno actual.
      */
     public Color getColorRellenoActual() {
@@ -296,11 +327,15 @@ public class PanelDeColores extends JPanel {
 
     /**
      * Verifica si la opción de relleno está seleccionada actualmente.
+     * 
      * @return true si el relleno está habilitado, false en caso contrario.
      */
     public boolean isRellenar() {
         return checkRellenar.isSelected();
     }
 
-
+    // Nuevo: Método getter para acceder al grosor actual
+     public int getGrosorActual() {
+         return grosorActual;
+     }
 }
