@@ -480,7 +480,7 @@ public class Ventana extends JFrame {
                 }
                 break;
             case "DibujoLibre": // Asegúrate de que el nombre coincida exactamente con lo guardado en FiguraData
-            case "Lapiz": // Asumiendo que Lapiz y DibujoLibre son similares o uno es el otro
+            //case "Lapiz": // Asumiendo que Lapiz y DibujoLibre son similares o uno es el otro
                 if (puntosTrazo != null && !puntosTrazo.isEmpty()) {
                     // Para DibujoLibre/Lapiz, necesitas un constructor que acepte la lista de puntos
                     // O añadir los puntos uno por uno después de crear la instancia.
@@ -523,7 +523,7 @@ public class Ventana extends JFrame {
             // (la mayoría de las figuras cerradas, pero no Línea, Borrador, DibujoLibre/Lapiz).
             // Puedes añadir un método 'soportaRelleno()' a Figura si la lógica es compleja,
             // o simplemente verificar si la figura no es de un tipo que no soporta relleno.
-            if (!(nuevaFigura instanceof Linea) && !(nuevaFigura instanceof DibujoLibre) && !(nuevaFigura instanceof Lapiz)) {
+            if (!(nuevaFigura instanceof Linea) && !(nuevaFigura instanceof DibujoLibre)) {
                 nuevaFigura.setColorDeRelleno(figuraData.getColorDeRelleno()); // Podría ser null
                 nuevaFigura.setRelleno(figuraData.isEstaRelleno());
             }

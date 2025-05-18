@@ -55,9 +55,9 @@ public class PanelDeDibujo extends JPanel implements HerramientaSeleccionadaList
             BufferedImage seleccionarImage = ImageIO.read(getClass().getResource("/iconos/seleccion2.png"));
 
             cursorDibujoGeneral = Toolkit.getDefaultToolkit().createCustomCursor(dibujoGeneralImage, new Point(16, 16), "cursorDibujoGeneral");
-            cursorBorrador = Toolkit.getDefaultToolkit().createCustomCursor(borradorImage, new Point(8, 8), "cursorBorrador");
+            cursorBorrador = Toolkit.getDefaultToolkit().createCustomCursor(borradorImage, new Point(8, 18), "cursorBorrador");
             cursorLataPintura = Toolkit.getDefaultToolkit().createCustomCursor(lataPinturaImage, new Point(0, 24), "cursorLataPintura");
-            cursorSeleccionar = Toolkit.getDefaultToolkit().createCustomCursor(seleccionarImage, new Point(0, 0), "cursorSeleccionar");
+            cursorSeleccionar = Toolkit.getDefaultToolkit().createCustomCursor(seleccionarImage, new Point(16, 16), "cursorSeleccionar");
 
         } catch (IOException e) {
             System.err.println("Error al cargar las imágenes de los cursores: " + e.getMessage());
@@ -187,9 +187,9 @@ public class PanelDeDibujo extends JPanel implements HerramientaSeleccionadaList
                 // Si la figura actual no es nula (es decir, es una herramienta de dibujo)
                 if (figuraActual != null) {
                     // Usamos los colores y estado de relleno DEL PANEL DE COLORES
-                   figuraActual.setColorDePrimerPlano(panelDeColores.getColorBordeActual());
-        figuraActual.setColorDeRelleno(panelDeColores.getColorRellenoActual());
-        figuraActual.setRelleno(panelDeColores.isRellenar()); // ¡Asegúrate de esto!
+                figuraActual.setColorDePrimerPlano(panelDeColores.getColorBordeActual());
+                figuraActual.setColorDeRelleno(panelDeColores.getColorRellenoActual());
+                figuraActual.setRelleno(panelDeColores.isRellenar()); // ¡Asegúrate de esto!
 
     System.out.println("Rellenar: " + panelDeColores.isRellenar() + ", Color Relleno: " + panelDeColores.getColorRellenoActual()); // *** AÑADIR ESTO ***
 
