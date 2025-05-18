@@ -36,8 +36,11 @@ public class Rectangulo extends Figura {
      */
     @Override
     public void dibujar(Graphics g) {
-        g.setColor(colorDePrimerPlano); // Establecer el color para el contorno.
-
+        //g.setColor(colorDePrimerPlano); // Establecer el color para el contorno.
+        Graphics2D g2d = (Graphics2D) g; // Castear a Graphics2D
+        g2d.setColor(colorDePrimerPlano);
+        g2d.setStroke(new BasicStroke(this.grosor)); // Establecer el grosor
+        
         // Calcular las coordenadas de la esquina superior izquierda, el ancho y la altura del rectángulo.
         int x = Math.min(puntoInicial.x, puntoFinal.x);
         int y = Math.min(puntoInicial.y, puntoFinal.y);
@@ -45,16 +48,16 @@ public class Rectangulo extends Figura {
         int height = Math.abs(puntoFinal.y - puntoInicial.y);
 
         if (relleno) { // Verificar si el relleno está habilitado.
-            g.setColor(colorDeRelleno); // Establecer el color de relleno.
-            g.fillRect(x, y, width, height); // Dibujar el rectángulo relleno.
+            g2d.setColor(colorDeRelleno);
+            g2d.fillRect(x, y, width, height);
 
             // Dibujar el borde si hay un color diferente.
             if (colorDeRelleno != colorDePrimerPlano) {
-                g.setColor(colorDePrimerPlano); // Restablecer el color al color de borde.
-                g.drawRect(x, y, width, height); // Dibujar el contorno del rectángulo.
+                g2d.setColor(colorDePrimerPlano);
+                g2d.drawRect(x, y, width, height);
             }
         } else {
-            g.drawRect(x, y, width, height); // Si no hay relleno, solo dibujar el contorno del rectángulo.
+            g2d.drawRect(x, y, width, height);
         }
     }
 
@@ -66,6 +69,7 @@ public class Rectangulo extends Figura {
         data.setColorDePrimerPlano(this.colorDePrimerPlano);
         data.setColorDeRelleno(this.colorDeRelleno);
         data.setEstaRelleno(this.relleno);
+        data.setGrosor(this.grosor);  // Guardar el grosor
         // No tiene sentido para Rectangulo setear centro, puntosTrazo o tamanoBorrador
         return data;
     }

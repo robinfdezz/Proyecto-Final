@@ -36,7 +36,9 @@ public class Heptagono extends Figura {
     @Override
     public void dibujar(Graphics g) {
         // Establecer el color del borde
-        g.setColor(colorDePrimerPlano); // Establecer el color para el contorno.
+        Graphics2D g2 = (Graphics2D) g;
+        g2.setColor(colorDePrimerPlano);
+        g2.setStroke(new BasicStroke(this.grosor)); // Establecer el grosor
 
         // Calcular el radio
         int radio = (int) getPunto(0).distance(getPunto(1)); // Calcular el radio.
@@ -55,18 +57,18 @@ public class Heptagono extends Figura {
         // Manejar el relleno
         if (relleno) { // Verificar si el relleno está habilitado.
             if (colorDeRelleno != null) {
-                g.setColor(colorDeRelleno); // Establecer el color de relleno.
-                g.fillPolygon(heptagonoForma); // Dibujar el heptágono relleno.
+                g2.setColor(colorDeRelleno); // Establecer el color de relleno.
+                g2.fillPolygon(heptagonoForma); // Dibujar el heptágono relleno.
             }
 
             // Dibujar el borde solo si es diferente del color de relleno.
             if (colorDeRelleno != colorDePrimerPlano) {
-                g.setColor(colorDePrimerPlano); // Restablecer el color al color de borde.
-                g.drawPolygon(heptagonoForma); // Dibujar el contorno.
+                g2.setColor(colorDePrimerPlano); // Restablecer el color al color de borde.
+                g2.drawPolygon(heptagonoForma); // Dibujar el contorno.
             }
         } else {
             // Si no hay relleno, solo dibujar el contorno.
-            g.drawPolygon(heptagonoForma);
+            g2.drawPolygon(heptagonoForma);
         }
     }
 
@@ -79,6 +81,7 @@ public class Heptagono extends Figura {
         data.setColorDeRelleno(this.colorDeRelleno);
         data.setEstaRelleno(this.relleno);
         data.setCentro(this.getPunto(0)); // Guardar el centro explícitamente también por claridad
+        data.setGrosor(this.grosor);  // Guardar el grosor
         return data;
     }
 

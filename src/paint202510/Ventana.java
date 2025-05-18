@@ -360,7 +360,6 @@ public class Ventana extends JFrame {
         Point centro = figuraData.getCentro(); // Usado por algunas figuras (Circulo, Poligonos, Estrella, Rombo)
         java.util.ArrayList<Point> puntosTrazo = figuraData.getPuntosTrazo(); // Usado por DibujoLibre/Lapiz
 
-
         // --- IMPLEMENTACIÓN NECESARIA: Crear la figura correcta según el tipo ---
         // Debes añadir un 'case' para cada tipo de figura que soportes
         // Asegúrate de usar los puntos (pInicial, pFinal, centro, puntosTrazo) que correspondan
@@ -385,7 +384,7 @@ public class Ventana extends JFrame {
                     nuevaFigura.actualizar(pFinal); // Ovalo usa actualizar para definir el segundo punto y tamaño
                 }
                 break;
-            case "Circulo":
+            case "Círculo":
                 // Tu Circulo usa puntoInicial como centro y puntoFinal para el radio.
                 // FiguraData tiene 'centro' y 'puntoFinal'. Si guardaste el centro en 'centro' de FiguraData
                 // y un punto en la circunferencia en 'puntoFinal' de FiguraData, usa eso.
@@ -403,13 +402,13 @@ public class Ventana extends JFrame {
                     nuevaFigura.actualizar(pFinal); // Cuadrado usa actualizar para definir el segundo punto
                 }
                 break;
-            case "Triángulo": // Asegúrate de que el nombre coincida con el guardado en getFiguraData()
+            case "Triangulo": // Asegúrate de que el nombre coincida con el guardado en getFiguraData()
                 if (pInicial != null && pFinal != null) {
                     nuevaFigura = new Triangulo(pInicial);
                     nuevaFigura.actualizar(pFinal); // Triangulo usa actualizar para definir el segundo punto
                 }
                 break;
-            case "Pentágono": // Asegúrate de que el nombre coincida con el guardado en getFiguraData()
+            case "Pentagono": // Asegúrate de que el nombre coincida con el guardado en getFiguraData()
                 // Tu Pentagono usa 'centro' como centro geométrico y 'puntoActual' (que corresponde a puntoFinal en FiguraData)
                 // como referencia para tamaño/orientación.
                 if (centro != null && pFinal != null) {
@@ -508,7 +507,6 @@ public class Ventana extends JFrame {
         }
         // --- FIN IMPLEMENTACIÓN NECESARIA ---
 
-
         // Si se creó la figura y NO es Borrador (que no se copia/pega normalmente)
         // establecer sus propiedades comunes (colores, relleno).
         // Algunas figuras como DibujoLibre/Lapiz podrían manejar sus colores de manera diferente.
@@ -530,9 +528,8 @@ public class Ventana extends JFrame {
 
             // Si decides copiar el tamaño del borrador, necesitarías un setter en Borrador y manejarlo aquí
             // if (nuevaFigura instanceof Borrador) { ((Borrador) nuevaFigura).setTamano(figuraData.getTamanoBorrador()); }
+            nuevaFigura.setGrosor(figuraData.getGrosor()); // Establecer el grosor
         }
-
-
         return nuevaFigura;
     }
 

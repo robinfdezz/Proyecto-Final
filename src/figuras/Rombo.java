@@ -1,8 +1,6 @@
 package figuras;
 
-import java.awt.Graphics;
-import java.awt.Point;
-import java.awt.Polygon;
+import java.awt.*;
 
 /**
  * Representa una forma de rombo.
@@ -34,11 +32,14 @@ public class Rombo extends Figura {
      */
     @Override
     public void dibujar(Graphics g) {
-        g.setColor(colorDePrimerPlano); // Establecer el color para el contorno.
+        Graphics2D g2 = (Graphics2D) g;
+        g2.setColor(colorDePrimerPlano);
+        g2.setStroke(new BasicStroke(this.grosor)); // Establecer el grosor
+
 
         if (relleno) { // Verificar si el relleno está habilitado.
             if (colorDeRelleno != null) {
-                g.setColor(colorDeRelleno); // Establecer el color de relleno.
+                g2.setColor(colorDeRelleno); // Establecer el color de relleno.
             }
             int dx = getPunto(1).x - getPunto(0).x; // Calcular la distancia horizontal desde el centro.
             int dy = getPunto(1).y - getPunto(0).y; // Calcular la distancia vertical desde el centro.
@@ -58,12 +59,12 @@ public class Rombo extends Figura {
             };
 
             Polygon rombo = new Polygon(xPoints, yPoints, 4); // Crear un objeto Polygon para el rombo.
-            g.fillPolygon(rombo); // Dibujar el rombo relleno.
+            g2.fillPolygon(rombo); // Dibujar el rombo relleno.
 
             // Dibujar el borde si es diferente del color de relleno.
             if (colorDeRelleno != colorDePrimerPlano) {
-                g.setColor(colorDePrimerPlano); // Restablecer el color al color de borde.
-                g.drawPolygon(rombo); // Dibujar el contorno.
+                g2.setColor(colorDePrimerPlano); // Restablecer el color al color de borde.
+                g2.drawPolygon(rombo); // Dibujar el contorno.
             }
         } else {
             // Si no hay relleno, solo dibujar el contorno.
@@ -85,7 +86,7 @@ public class Rombo extends Figura {
             };
 
             Polygon rombo = new Polygon(xPoints, yPoints, 4);
-            g.drawPolygon(rombo); // Solo dibujar el contorno.
+            g2.drawPolygon(rombo); // Solo dibujar el contorno.
         }
     }
 
@@ -98,36 +99,31 @@ public class Rombo extends Figura {
         data.setColorDeRelleno(this.colorDeRelleno);
         data.setEstaRelleno(this.relleno);
         data.setCentro(this.getPunto(0)); // Guardar el centro explícitamente también por claridad
+        data.setGrosor(this.grosor);  // Guardar el grosor
         return data;
     }
 
-    @Override
-    public boolean contains(Point p) {
-        if (getPunto(0) == null || getPunto(1) == null) {
-            return false;
-        }
+@Override
+ public boolean contains(Point p) {
+  if (getPunto(0) == null || getPunto(1) == null || p == null) {
+   return false;
+  }
 
-        // Calcular los vértices del rombo basado en el centro y el puntoActual.
-        int dx = getPunto(1).x - getPunto(0).x;
-        int dy = getPunto(1).y - getPunto(0).y;
+  int dx = getPunto(1).x - getPunto(0).x;
+  int dy = getPunto(1).y - getPunto(0).y;
 
-        Point[] vertices = new Point[]{
-                getPunto(0),
-                new Point(getPunto(0).x + dx, getPunto(0).y),
-                new Point(getPunto(0).x, getPunto(0).y + dy),
-                new Point(getPunto(0).x - dx, getPunto(0).y)
-        };
+  // Si dx o dy son 0, el rombo se degenera en una línea o punto.
+  if (dx == 0 && dy == 0) {
+   return getPunto(0).distance(p) < 5; // Tolerancia para clics cercanos al centro.
+  }
 
-        // Ray casting algorithm to check if the point is inside the polygon
-        boolean inside = false;
-        for (int i = 0, j = vertices.length - 1; i < vertices.length; j = i++) {
-            if ((vertices[i].y > p.y) != (vertices[j].y > p.y) &&
-                    (p.x < (vertices[j].x - vertices[i].x) * (p.y - vertices[i].y) / (vertices[j].y - vertices[i].y) + vertices[i].x)) {
-                inside = !inside;
-            }
-        }
-        return inside;
-    }
+  // Transformar las coordenadas del punto para simplificar la comparación.
+  double relX = (p.x - getPunto(0).x) / (double) dx;
+  double relY = (p.y - getPunto(0).y) / (double) dy;
+
+  // Verificar si el punto está dentro del rombo usando desigualdades.
+  return Math.abs(relX) + Math.abs(relY) <= 1;
+ }
 
     @Override
     public java.awt.Rectangle getBounds() {

@@ -13,11 +13,16 @@ public abstract class Figura implements Serializable {
     protected boolean relleno = false;
     public Color colorDeRelleno;
     protected List<Point> puntos = new ArrayList<>();  // Usar una lista de puntos
+    protected int grosor;
+
 
     // Constructores
-    public Figura() {} // Constructor por defecto
+    public Figura() {
+        this.grosor = 1;
+    } // Constructor por defecto
 
     public Figura(Point... puntosIniciales) {
+        this.grosor = 1;
         puntos.addAll(Arrays.asList(puntosIniciales));
     }
 
@@ -108,4 +113,13 @@ public void setColorDeRelleno(Color colorRellenoActual) {
 public void setRelleno(boolean relleno) {
     this.relleno = relleno;
 }
+
+    public void setGrosor(int grosor) {
+        this.grosor = grosor;
+    }
+
+    public int getGrosor() {
+        return this.grosor;
+    }
+
 }

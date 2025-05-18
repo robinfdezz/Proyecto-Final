@@ -29,9 +29,13 @@ public class Borrador extends Figura {
      */
     @Override
     public void dibujar(Graphics g) {
+        Graphics2D g2d = (Graphics2D) g;
+        g2d.setColor(Color.WHITE);
+        g2d.setStroke(new BasicStroke(this.grosor)); // Establecer el grosor
+        g2d.fillOval(getPunto(0).x - tamano / 2, getPunto(0).y - tamano / 2, tamano, tamano);
         // El borrador siempre dibuja en blanco para simular borrado
-        g.setColor(Color.WHITE);
-        g.fillOval(getPunto(0).x - tamano / 2, getPunto(0).y - tamano / 2, tamano, tamano); // Dibujar un óvalo blanco relleno.
+        // g.setColor(Color.WHITE);
+        // g.fillOval(getPunto(0).x - tamano / 2, getPunto(0).y - tamano / 2, tamano, tamano); // Dibujar un óvalo blanco relleno.
     }
 
     /**

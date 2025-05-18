@@ -35,6 +35,7 @@ public class Ring extends Figura {
     @Override
     public void dibujar(Graphics g) {
         Graphics2D g2d = (Graphics2D) g;
+        g2d.setStroke(new BasicStroke(this.grosor)); // Establecer el grosor
 
         int radioExterior = (int) getPunto(0).distance(getPunto(1)); // Calcular el radio exterior
         int radioInterior = (int) (radioExterior * 0.6); // Calcular el radio interior (ejemplo: 60% del exterior)
@@ -111,6 +112,7 @@ public class Ring extends Figura {
         data.setEstaRelleno(this.relleno);
         // No tiene sentido para Ring setear puntosTrazo o tamanoBorrador
         data.setCentro(this.getPunto(0)); // Guardar el centro explícitamente también por claridad
+        data.setGrosor(this.grosor);
         return data;
     }
 

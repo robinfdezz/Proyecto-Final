@@ -32,8 +32,10 @@ public class Linea extends Figura {
      */
     @Override
     public void dibujar(Graphics g) {
-        g.setColor(colorDePrimerPlano); // Usar colorDePrimerPlano de la clase base.
-        g.drawLine(getPunto(0).x, getPunto(0).y, getPunto(1).x, getPunto(1).y); // Dibujar la línea.
+        Graphics2D g2d = (Graphics2D) g;  // Castear a Graphics2D
+        g2d.setColor(colorDePrimerPlano); // Usar colorDePrimerPlano de la clase base.
+        g2d.setStroke(new BasicStroke(this.grosor)); // Establecer el grosor
+        g2d.drawLine(getPunto(0).x, getPunto(0).y, getPunto(1).x, getPunto(1).y); // Dibujar la línea.
     }
 
     /**
@@ -53,6 +55,7 @@ public class Linea extends Figura {
         data.setColorDePrimerPlano(this.colorDePrimerPlano);
         data.setColorDeRelleno(this.colorDeRelleno);
         data.setEstaRelleno(this.relleno);
+        data.setGrosor(this.grosor); // Guardar el grosor
         return data;
     }
 

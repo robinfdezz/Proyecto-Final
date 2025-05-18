@@ -34,6 +34,7 @@ public class Trapecio extends Figura {
     @Override
     public void dibujar(Graphics g) {
         Graphics2D g2 = (Graphics2D) g;
+        g2.setStroke(new BasicStroke(this.grosor)); // Establecer el grosor
 
         // Calcular las coordenadas del cuadro delimitador
         int x = Math.min(getPunto(0).x, getPunto(1).x);
@@ -89,6 +90,7 @@ public class Trapecio extends Figura {
         data.setColorDePrimerPlano(this.colorDePrimerPlano);
         data.setColorDeRelleno(this.colorDeRelleno);
         data.setEstaRelleno(this.relleno);
+        data.setGrosor(this.grosor);  // Guardar el grosor
         return data;
     }
 

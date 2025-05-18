@@ -99,7 +99,7 @@ public class BarraDeHerramientas extends JToolBar{
         formatearYAgregar(btnSeleccionar, "seleccion.png", "Seleccionar Figura", true);
         formatearYAgregar(btnBorrador, "borrador.png", "Borrador", true);
 
-        formatearYAgregar(btnLataPintura, "lata_pintura.png", "Lata de Pintura", true);
+        formatearYAgregar(btnLataPintura, "color_figura.png", "Color de relleno", true);
         // Añadir un separador visual
         add(new Separator());
 

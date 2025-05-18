@@ -37,7 +37,9 @@ public class Cuadrado extends Figura {
      */
     @Override
     public void dibujar(Graphics g) {
-        g.setColor(colorDePrimerPlano); // Usa el color de la clase Figura para el contorno.
+        Graphics2D g2d = (Graphics2D) g; // Castear a Graphics2D
+        g2d.setColor(colorDePrimerPlano);
+        g2d.setStroke(new BasicStroke(this.grosor)); // Establecer el grosor
 
         // Calcular las coordenadas de la esquina superior izquierda, el ancho y la altura.
         int x = Math.min(puntoInicial.x, puntoFinal.x);
@@ -70,20 +72,18 @@ public class Cuadrado extends Figura {
         data.setColorDePrimerPlano(this.colorDePrimerPlano);
         data.setColorDeRelleno(this.colorDeRelleno);
         data.setEstaRelleno(this.relleno);
-        // No tiene sentido para Rectangulo setear centro, puntosTrazo o tamanoBorrador
+        data.setGrosor(this.grosor);  // Guardar el grosor
         return data;
     }
 
     // Implementación de contains para Rectángulo (más precisa)
-    @Override
-    public boolean contains(Point p) {
-        int x = Math.min(puntoInicial.x, puntoFinal.x);
-        int y = Math.min(puntoInicial.y, puntoFinal.y);
-        int width = Math.abs(puntoFinal.x - puntoInicial.x);
-        int height = Math.abs(puntoFinal.y - puntoInicial.y);
-        // Crear un rectángulo Java y verificar si contiene el punto
-        return new java.awt.Rectangle(x, y, width, height).contains(p);
-    }
+@Override
+ public boolean contains(Point p) {
+  int x = Math.min(puntoInicial.x, puntoFinal.x);
+  int y = Math.min(puntoInicial.y, puntoFinal.y);
+  int lado = Math.max(Math.abs(puntoFinal.x - puntoInicial.x), Math.abs(puntoFinal.y - puntoInicial.y));
+  return new java.awt.Rectangle(x, y, lado, lado).contains(p);
+ }
 
     @Override
     public Rectangle getBounds() {

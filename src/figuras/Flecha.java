@@ -39,6 +39,7 @@ public class Flecha extends Figura {
     public void dibujar(Graphics g) {
         Graphics2D g2d = (Graphics2D) g;
         g2d.setColor(colorDePrimerPlano);
+        g2d.setStroke(new BasicStroke(this.grosor)); // Establecer el grosor
 
         double dx = getPunto(1).x - getPunto(0).x;
         double dy = getPunto(1).y - getPunto(0).y;
@@ -71,6 +72,7 @@ public class Flecha extends Figura {
         data.setColorDePrimerPlano(this.colorDePrimerPlano);
         data.setColorDeRelleno(this.colorDeRelleno);
         data.setEstaRelleno(this.relleno);
+        data.setGrosor(this.grosor);  // Guardar el grosor
         return data;
     }
 

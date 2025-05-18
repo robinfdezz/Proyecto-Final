@@ -21,6 +21,7 @@ public class FiguraData implements Serializable {
     private Color colorDeRelleno;
     private boolean estaRelleno;
     private int tamanoBorrador; // Específico para Borrador, si decides copiarlo
+    private int grosor;
 
     /**
      * Constructor básico de FiguraData.
@@ -116,4 +117,7 @@ public class FiguraData implements Serializable {
                 ", puntosTrazoSize=" + (puntosTrazo != null ? puntosTrazo.size() : 0) +
                 '}';
     }
+
+    public int getGrosor() { return grosor; }
+    public void setGrosor(int grosor) { this.grosor = grosor; }
 }

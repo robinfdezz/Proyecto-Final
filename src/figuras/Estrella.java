@@ -2,9 +2,7 @@ package figuras;
 
 //import javafx.scene.shape.Rectangle;
 
-import java.awt.Graphics;
-import java.awt.Point;
-import java.awt.Polygon;
+import java.awt.*;
 import java.util.ArrayList;
 
 /**
@@ -40,7 +38,9 @@ public class Estrella extends Figura {
     @Override
     public void dibujar(Graphics g) {
         // Establecer el color del borde
-        g.setColor(colorDePrimerPlano); // Establecer el color para el contorno.
+        Graphics2D g2 = (Graphics2D) g;
+        g2.setColor(colorDePrimerPlano);
+        g2.setStroke(new BasicStroke(this.grosor)); // Establecer el grosor
 
         // Calcular el radio
         int radio = (int) getPunto(0).distance(getPunto(1)); // Calcular el radio exterior.
@@ -60,18 +60,18 @@ public class Estrella extends Figura {
         // Manejar el relleno
         if (relleno) { // Verificar si el relleno está habilitado.
             if (colorDeRelleno != null) {
-                g.setColor(colorDeRelleno); // Establecer el color de relleno.
+                g2.setColor(colorDeRelleno); // Establecer el color de relleno.
                 g.fillPolygon(estrellaForma); // Dibujar la estrella rellena.
             }
 
             // Dibujar el borde solo si es diferente del color de relleno.
             if (colorDeRelleno != colorDePrimerPlano) {
-                g.setColor(colorDePrimerPlano); // Restablecer el color al color de borde.
-                g.drawPolygon(estrellaForma); // Dibujar el contorno.
+                g2.setColor(colorDePrimerPlano); // Restablecer el color al color de borde.
+                g2.drawPolygon(estrellaForma); // Dibujar el contorno.
             }
         } else {
             // Si no hay relleno, solo dibujar el contorno.
-            g.drawPolygon(estrellaForma);
+            g2.drawPolygon(estrellaForma);
         }
     }
 
@@ -83,7 +83,8 @@ public class Estrella extends Figura {
         data.setColorDePrimerPlano(this.colorDePrimerPlano);
         data.setColorDeRelleno(this.colorDeRelleno);
         data.setEstaRelleno(this.relleno);
-        data.setCentro(this.getPunto(0)); // Guardar el centro explícitamente también por claridad
+        data.setCentro(this.getPunto(0));
+        data.setGrosor(this.grosor);
         return data;
     }
 
@@ -112,13 +113,35 @@ public class Estrella extends Figura {
         return inside;
     }
 
-    @Override
-    public java.awt.Rectangle getBounds() {
-        if (puntos.size() < 2) return null;
+@Override
+ public java.awt.Rectangle getBounds() {
+  if (puntos.size() < 2 || getPunto(0) == null || getPunto(1) == null) return null;
 
-        int radio = (int) getPunto(0).distance(getPunto(1));
-        return new java.awt.Rectangle(getPunto(0).x - radio, getPunto(0).y - radio, radio * 2, radio * 2);
-    }
+  int radio = (int) getPunto(0).distance(getPunto(1));
+  int[] puntosX = new int[puntas * 2];
+  int[] puntosY = new int[puntas * 2];
+
+  for (int i = 0; i < puntas * 2; i++) {
+   double angulo = Math.toRadians(-90 + i * (360.0 / (puntas * 2)));
+   int radioActual = (i % 2 == 0) ? radio : (int) (radio * 0.5);
+   puntosX[i] = getPunto(0).x + (int) (radioActual * Math.cos(angulo));
+   puntosY[i] = getPunto(0).y + (int) (radioActual * Math.sin(angulo));
+  }
+
+  int minX = puntosX[0];
+  int minY = puntosY[0];
+  int maxX = puntosX[0];
+  int maxY = puntosY[0];
+
+  for (int i = 1; i < puntosX.length; i++) {
+   minX = Math.min(minX, puntosX[i]);
+   minY = Math.min(minY, puntosY[i]);
+   maxX = Math.max(maxX, puntosX[i]);
+   maxY = Math.max(maxY, puntosY[i]);
+  }
+
+  return new java.awt.Rectangle(minX, minY, maxX - minX, maxY - minY);
+ }
 
     @Override
     public void translate(Point offset) {

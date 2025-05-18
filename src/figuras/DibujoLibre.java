@@ -24,24 +24,24 @@ public class DibujoLibre extends Figura {
      */
     @Override
     public void dibujar(Graphics g) {
+        Graphics2D g2d = (Graphics2D) g; // Castear a Graphics2D
+        g2d.setColor(colorDePrimerPlano);
+        g2d.setStroke(new BasicStroke(this.grosor)); // Establecer el grosor
+
         if (puntos.size() < 2) {
             // Si solo hay un punto o ninguno, no hay línea que dibujar
             if (puntos.size() == 1 && getPunto(0) != null) {
-                // Dibujar un punto si solo hay un punto
-                g.setColor(colorDePrimerPlano);
-                g.fillRect(getPunto(0).x, getPunto(0).y, 1, 1);
+                g2d.fillRect(getPunto(0).x, getPunto(0).y, 1, 1);
             }
             return;
         }
-
-        g.setColor(colorDePrimerPlano); // Establecer el color para el dibujo.
 
         // Dibujar líneas entre puntos consecutivos.
         for (int i = 1; i < puntos.size(); i++) {
             Point p1 = getPunto(i - 1); // Obtener el punto anterior.
             Point p2 = getPunto(i); // Obtener el punto actual.
             if (p1 != null && p2 != null) {
-                g.drawLine(p1.x, p1.y, p2.x, p2.y); // Dibujar un segmento de línea entre los dos puntos.
+                g2d.drawLine(p1.x, p1.y, p2.x, p2.y);
             }
         }
     }
@@ -64,6 +64,7 @@ public class DibujoLibre extends Figura {
         data.setColorDeRelleno(this.colorDeRelleno);
         data.setEstaRelleno(this.relleno);
         data.setPuntosTrazo(new ArrayList<>(this.puntos)); // Clonar la lista para evitar modificaciones externas
+        data.setGrosor(this.grosor);  // Guardar el grosor
         return data;
     }
 

@@ -1,8 +1,6 @@
 package figuras;
 
-import java.awt.Graphics;
-import java.awt.Point;
-import java.awt.Polygon;
+import java.awt.*;
 import java.util.ArrayList;
 
 /**
@@ -36,11 +34,13 @@ public class Pentagono extends Figura {
      */
     @Override
     public void dibujar(Graphics g) {
-        g.setColor(colorDePrimerPlano); // Establecer el color para el contorno.
+        Graphics2D g2 = (Graphics2D) g;
+        g2.setColor(colorDePrimerPlano);
+        g2.setStroke(new BasicStroke(this.grosor)); // Establecer el grosor
 
         if (relleno) { // Verificar si el relleno está habilitado.
             if (colorDeRelleno != null) {
-                g.setColor(colorDeRelleno); // Establecer el color de relleno.
+                g2.setColor(colorDeRelleno); // Establecer el color de relleno.
             }
             int radio = (int) getPunto(0).distance(getPunto(1)); // Calcular el radio.
             int[] xPoints = new int[numeroLados]; // Arreglo para almacenar las coordenadas x de los vértices.
@@ -54,12 +54,12 @@ public class Pentagono extends Figura {
             }
 
             Polygon pentagono = new Polygon(xPoints, yPoints, 5); // Crear un objeto Polygon para el pentágono.
-            g.fillPolygon(pentagono); // Dibujar el pentágono relleno.
+            g2.fillPolygon(pentagono); // Dibujar el pentágono relleno.
 
             // Dibujar el borde si es diferente del color de relleno.
             if (colorDeRelleno != colorDePrimerPlano) {
-                g.setColor(colorDePrimerPlano); // Restablecer el color al color de borde.
-                g.drawPolygon(pentagono); // Dibujar el contorno.
+                g2.setColor(colorDePrimerPlano);
+                g2.drawPolygon(pentagono);
             }
         } else {
             // Si no hay relleno, solo dibujar el contorno.
@@ -74,7 +74,7 @@ public class Pentagono extends Figura {
             }
 
             Polygon pentagono = new Polygon(xPoints, yPoints, 5);
-            g.drawPolygon(pentagono); // Solo dibujar el contorno.
+            g2.drawPolygon(pentagono);
         }
     }
 
@@ -87,6 +87,7 @@ public class Pentagono extends Figura {
         data.setColorDeRelleno(this.colorDeRelleno);
         data.setEstaRelleno(this.relleno);
         data.setCentro(this.getPunto(0)); // Guardar el centro explícitamente también por claridad
+        data.setGrosor(this.grosor);  // Guardar el grosor
         return data;
     }
 

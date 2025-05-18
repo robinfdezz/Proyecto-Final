@@ -32,8 +32,12 @@ public class Ovalo extends Figura {
      */
     @Override
     public void dibujar(Graphics g) {
-        g.setColor(colorDePrimerPlano); // Establecer el color para el contorno.
-
+        //g.setColor(colorDePrimerPlano); // Establecer el color para el contorno.
+        //g2d.setStroke(new BasicStroke(this.grosor)); // Usar this.grosor
+        Graphics2D g2 = (Graphics2D) g;
+        g2.setColor(colorDePrimerPlano);
+        g2.setStroke(new BasicStroke(this.grosor)); // Establecer el grosor
+        
         // Calcular las coordenadas de la esquina superior izquierda, el ancho y la altura del cuadro delimitador.
         int x = Math.min(getPunto(0).x, getPunto(1).x);
         int y = Math.min(getPunto(0).y, getPunto(1).y);
@@ -42,17 +46,17 @@ public class Ovalo extends Figura {
 
         if (relleno) { // Verificar si el relleno está habilitado.
             if (colorDeRelleno != null) {
-                g.setColor(colorDeRelleno); // Establecer el color de relleno si se especifica.
+                g2.setColor(colorDeRelleno); // Establecer el color de relleno si se especifica.
             }
-            g.fillOval(x, y, width, height); // Dibujar el óvalo relleno.
+            g2.fillOval(x, y, width, height); // Dibujar el óvalo relleno.
 
             // Dibujar el borde si el color de relleno es diferente al color de borde.
             if (colorDeRelleno != colorDePrimerPlano && colorDeRelleno != null) {
-                g.setColor(colorDePrimerPlano); // Restablecer el color al color de borde.
-                g.drawOval(x, y, width, height); // Dibujar el contorno del óvalo.
+                g2.setColor(colorDePrimerPlano); // Restablecer el color al color de borde.
+                g2.drawOval(x, y, width, height); // Dibujar el contorno del óvalo.
             }
         } else {
-            g.drawOval(x, y, width, height); // Si no hay relleno, solo dibujar el contorno del óvalo.
+            g2.drawOval(x, y, width, height); // Si no hay relleno, solo dibujar el contorno del óvalo.
         }
     }
 
@@ -64,6 +68,7 @@ public class Ovalo extends Figura {
         data.setColorDePrimerPlano(this.colorDePrimerPlano);
         data.setColorDeRelleno(this.colorDeRelleno);
         data.setEstaRelleno(this.relleno);
+        data.setGrosor(this.grosor);  // Guardar el grosor
         // No tiene sentido para Rectangulo setear centro, puntosTrazo o tamanoBorrador
         return data;
     }
