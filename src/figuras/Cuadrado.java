@@ -92,4 +92,14 @@ public class Cuadrado extends Figura {
         int lado = Math.max(Math.abs(puntoFinal.x - puntoInicial.x), Math.abs(puntoFinal.y - puntoInicial.y));
         return new java.awt.Rectangle(x, y, lado, lado);
     }
+
+    @Override
+public void translate(Point offset) {
+    if (puntoInicial != null) {
+        puntoInicial.translate(offset.x, offset.y);
+    }
+    if (puntoFinal != null) {
+        puntoFinal.translate(offset.x, offset.y);
+    }
+}
 }

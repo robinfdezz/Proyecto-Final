@@ -35,6 +35,8 @@ public class PanelDeDibujo extends JPanel implements HerramientaSeleccionadaList
     private Cursor cursorBorrador;
     private Cursor cursorLataPintura;
     private Cursor cursorSeleccionar;
+    // Añadir esta variable como miembro de la clase PanelDeDibujo
+    private Point puntoInicialArrastre = null;
 
     /**
      * Constructor del panel de dibujo.
@@ -143,23 +145,26 @@ public class PanelDeDibujo extends JPanel implements HerramientaSeleccionadaList
                 }
 
                 // --- Lógica de Selección ---
-                if ("Seleccionar Figura".equals(herramienta)) {
-                    Figura figuraClickeada = getFiguraEnPunto(e.getPoint());
 
-                    if (figuraClickeada != null) {
-                        // Si se hizo clic en una figura, seleccionarla
-                        figuraSeleccionada = figuraClickeada;
-                        System.out.println("Figura seleccionada: " + figuraSeleccionada.getClass().getSimpleName()); // Para depuración
-                    } else {
-                        // Si se hizo clic fuera de cualquier figura, deseleccionar
-                        figuraSeleccionada = null;
-                        System.out.println("Ninguna figura seleccionada."); // Para depuración
-                    }
-                    figuraActual = null; // No estamos dibujando una nueva figura al seleccionar
-                    repaint(); // Repintar para mostrar la selección (o la falta de ella)
-                    return; // Salir del método ya que la acción fue seleccionar
-                }
-                // --- Fin Lógica de Selección ---
+
+                    if ("Seleccionar Figura".equals(herramienta)) {
+        Figura figuraClickeada = getFiguraEnPunto(e.getPoint());
+
+        if (figuraClickeada != null) {
+            figuraSeleccionada = figuraClickeada;
+            // Almacenar el desplazamiento inicial
+            puntoInicialArrastre = new Point(e.getPoint().x - figuraSeleccionada.getBounds().x, e.getPoint().y - figuraSeleccionada.getBounds().y);
+            System.out.println("Figura seleccionada: " + figuraSeleccionada.getClass().getSimpleName());
+        } else {
+            figuraSeleccionada = null;
+            System.out.println("Ninguna figura seleccionada.");
+        }
+        figuraActual = null;
+        repaint();
+        return;
+    }
+
+                    // --- Fin Lógica de Selección ---
 
 
                 // Si la herramienta es el Borrador, creamos y añadimos una instancia inmediatamente
@@ -211,6 +216,8 @@ public class PanelDeDibujo extends JPanel implements HerramientaSeleccionadaList
                 if (!"Borrador".equals(herramienta) && !"Seleccionar Figura".equals(herramienta)) {
                     figuraActual = null; // Restablecer la figura actual después de completar el dibujo (solo para figuras de dibujo).
                 }
+                 // Limpiar el punto de inicio del arrastre
+                puntoInicialArrastre = null;
             }
 
         });
@@ -226,6 +233,21 @@ public class PanelDeDibujo extends JPanel implements HerramientaSeleccionadaList
             public void mouseDragged(MouseEvent e) {
                 String herramienta = barraDeHerramientas.getHerramientaSeleccionada();
 
+                if ("Seleccionar Figura".equals(herramienta) && figuraSeleccionada != null) {
+                    // Calcular la nueva posición de la figura
+                    int nuevaX = e.getPoint().x - puntoInicialArrastre.x;
+                    int nuevaY = e.getPoint().y - puntoInicialArrastre.y;
+
+                    // Crear un Point para el desplazamiento
+                    Point nuevoPunto = new Point(nuevaX, nuevaY);
+
+                    // Mover la figura
+                    figuraSeleccionada.translate(new Point(nuevaX - figuraSeleccionada.getBounds().x, nuevaY - figuraSeleccionada.getBounds().y));
+                    repaint();
+                } else if (figuraActual != null && !"Seleccionar Figura".equals(herramienta)) {
+                    figuraActual.actualizar(e.getPoint());
+                }
+                
                 if ("Borrador".equals(herramienta)) {
                     // Para el borrador, creamos y añadimos una nueva instancia en cada arrastre
                     figuraActual = new Borrador(e.getPoint());

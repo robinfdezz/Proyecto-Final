@@ -88,5 +88,15 @@ public class Rectangulo extends Figura {
         int height = Math.abs(puntoFinal.y - puntoInicial.y);
         return new java.awt.Rectangle(x, y, width, height);
     }
+
+    @Override
+public void translate(Point offset) {
+    if (puntoInicial != null) {
+        puntoInicial.translate(offset.x, offset.y);
+    }
+    if (puntoFinal != null) {
+        puntoFinal.translate(offset.x, offset.y);
+    }
+}
 }
 
