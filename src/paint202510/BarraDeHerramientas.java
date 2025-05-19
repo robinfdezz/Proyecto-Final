@@ -13,14 +13,14 @@ import javax.swing.ImageIcon;
 import javax.swing.AbstractButton;
 
 /**
- * Clase BarraDeHerramientas - Crea y gestiona la barra de herramientas con botones de figuras y acciones.
+ * Clase BarraDeHerramientas - Crea y gestiona la barra de herramientas con
+ * botones de figuras y acciones.
  * Ahora incluye el botón de selección de figura.
  */
-public class BarraDeHerramientas extends JToolBar{
+public class BarraDeHerramientas extends JToolBar {
 
     // JToggleButtons para las herramientas de dibujo y selección
     protected JToggleButton btnLataPintura;
-
     protected JToggleButton btnBorrador;
     protected JToggleButton btnLapiz;
     protected JToggleButton btnLinea;
@@ -42,8 +42,6 @@ public class BarraDeHerramientas extends JToolBar{
     protected JToggleButton btnSeleccionar;
     protected JToggleButton btnEliminar;
 
-
-
     // JButtons para acciones
     protected JButton btnGuardar;
     protected JButton btnDeshacer;
@@ -51,7 +49,7 @@ public class BarraDeHerramientas extends JToolBar{
     protected JButton btnLimpiar;
 
     private ButtonGroup grupoBotones;
-    private HerramientaSeleccionadaListener herramientaSeleccionadaListener; // NUEVO
+    private HerramientaSeleccionadaListener herramientaSeleccionadaListener;
 
     private PanelDeColores panelDeColores; // Referencia a PanelDeColores
 
@@ -60,8 +58,8 @@ public class BarraDeHerramientas extends JToolBar{
 
         // Inicialización de los botones de figura (JToggleButtons)
         // ... (inicialización de otros botones)
-        btnLataPintura = new JToggleButton("Lata"); // Acortado para que quepa mejor
-        
+        btnLataPintura = new JToggleButton("Lata");
+
         btnLapiz = new JToggleButton("Lapiz");
         btnLinea = new JToggleButton("Linea");
         btnRectangulo = new JToggleButton("Rectangulo");
@@ -85,7 +83,6 @@ public class BarraDeHerramientas extends JToolBar{
         btnSeleccionar = new JToggleButton("Seleccionar Figura");
         btnEliminar = new JToggleButton("Eliminar Figura");
 
-
         // Inicialización de los botones de acción (JButtons)
         btnGuardar = new JButton("Guardar");
         btnDeshacer = new JButton("Deshacer");
@@ -94,7 +91,7 @@ public class BarraDeHerramientas extends JToolBar{
 
         // Formatear y agregar botones de acción primero
         // Añadir otro separador visual antes del botón Guardar
-        //add(new Separator());
+        // add(new Separator());
         formatearYAgregar(btnGuardar, "guardar.png", "Guardar Imagen", false);
         formatearYAgregar(btnDeshacer, "deshacer.png", "Deshacer última acción", false);
         formatearYAgregar(btnRehacer, "rehacer.png", "Rehacer última acción deshecha", false);
@@ -107,7 +104,8 @@ public class BarraDeHerramientas extends JToolBar{
         // Añadir un separador visual
         add(new Separator());
 
-        // Formatear y agregar botones de figuras y herramientas de dibujo (son herramientas)
+        // Formatear y agregar botones de figuras y herramientas de dibujo (son
+        // herramientas)
         formatearYAgregar(btnLapiz, "lapiz.png", "Dibujo Libre", true);
         formatearYAgregar(btnLinea, "linea.png", "Línea", true);
         formatearYAgregar(btnRectangulo, "rectangulo.png", "Rectángulo", true);
@@ -125,10 +123,6 @@ public class BarraDeHerramientas extends JToolBar{
         formatearYAgregar(btnTrapecio, "trapecio.png", "Trapecio", true);
         formatearYAgregar(btnSemicirculo, "semicirculo.png", "Semicirculo", true);
         formatearYAgregar(btnRing, "ring.png", "Ring", true);
-
-
-        
-
 
         // Configurar el ButtonGroup para los JToggleButtons (todas las herramientas)
         grupoBotones = new ButtonGroup();
@@ -154,9 +148,6 @@ public class BarraDeHerramientas extends JToolBar{
         grupoBotones.add(btnLataPintura);
         grupoBotones.add(btnEliminar);
 
-
-
-
         // --- Listeners para los botones de herramienta (JToggleButtons) ---
         ActionListener herramientaButtonListener = new ActionListener() {
             @Override
@@ -164,7 +155,8 @@ public class BarraDeHerramientas extends JToolBar{
                 // Cuando un botón de herramienta (incluido selección) es seleccionado
                 JToggleButton sourceButton = (JToggleButton) e.getSource();
                 if (sourceButton.isSelected()) {
-                    // Deseleccionar la figura en el panel de dibujo al cambiar a cualquier herramienta
+                    // Deseleccionar la figura en el panel de dibujo al cambiar a cualquier
+                    // herramienta
                     notificarCambioDeHerramienta(); // notif del cambio de herramienta
                     if (panelDeColores != null && panelDeColores.getPanelDeDibujo() != null) {
                         panelDeColores.getPanelDeDibujo().deseleccionarFigura();
@@ -198,8 +190,6 @@ public class BarraDeHerramientas extends JToolBar{
         btnLataPintura.addActionListener(herramientaButtonListener);
         btnEliminar.addActionListener(herramientaButtonListener);
 
-
-
         // --- Listeners para los botones de acción (JButtons) ---
         // Al usar un botón de acción, deseleccionar cualquier herramienta seleccionada
 
@@ -219,7 +209,6 @@ public class BarraDeHerramientas extends JToolBar{
         btnRehacer.addActionListener(accionButtonListener);
         btnLimpiar.addActionListener(accionButtonListener);
 
-
     }
 
     // --- Metodos para herramienta seleccionada ---
@@ -233,15 +222,14 @@ public class BarraDeHerramientas extends JToolBar{
         }
     }
 
-    
-    // Método formatearYAgregar actualizado
+    // Método formatearYAgregar
     private void formatearYAgregar(AbstractButton boton, String nombreIcono, String tooltip, boolean esHerramienta) {
         boton.setFocusable(false);
         boton.setToolTipText("Seleccione: " + tooltip); // Mantener "Seleccione: " para getHerramientaSeleccionada()
 
-        // Usar un ClientProperty para marcar si es un botón de herramienta (JToggleButton)
+        // Usar un ClientProperty para marcar si es un botón de herramienta
+        // (JToggleButton)
         boton.putClientProperty("esHerramienta", esHerramienta);
-
 
         java.net.URL ruta = getClass().getResource("/iconos/" + nombreIcono);
         if (ruta != null) {
@@ -277,13 +265,11 @@ public class BarraDeHerramientas extends JToolBar{
         return "Ninguna";
     }
 
-
     public JButton getBtnGuardar() {
         return btnGuardar;
     }
 
     /**
-     * Gets the Undo button.
      * @return The Undo JButton.
      */
     public JButton getBtnDeshacer() {
@@ -291,7 +277,7 @@ public class BarraDeHerramientas extends JToolBar{
     }
 
     /**
-     * Gets the Redo button.
+
      * @return The Redo JButton.
      */
     public JButton getBtnRehacer() {
@@ -299,16 +285,12 @@ public class BarraDeHerramientas extends JToolBar{
     }
 
     /**
-     * Gets the Clear button.
      * @return The Clear JButton.
      */
     public JButton getBtnLimpiar() {
         return btnLimpiar;
     }
 
-    /**
-     * Deselecciona todos los JToggleButtons (herramientas) en esta barra de herramientas.
-     */
     public void deseleccionarBotonesHerramienta() {
         if (grupoBotones != null) {
             grupoBotones.clearSelection(); // Esto deselecciona todos los botones en el grupo
@@ -317,6 +299,7 @@ public class BarraDeHerramientas extends JToolBar{
 
     /**
      * Establece la referencia al PanelDeColores.
+     * 
      * @param panelDeColores La instancia de PanelDeColores.
      */
     public void setPanelDeColores(PanelDeColores panelDeColores) {
@@ -326,7 +309,9 @@ public class BarraDeHerramientas extends JToolBar{
     // Este método ahora está en BarraDeHerramientas
     /**
      * Establece el estado seleccionado del botón de selección de figura.
-     * @param selected El estado a establecer (true para seleccionado, false para deseleccionado).
+     * 
+     * @param selected El estado a establecer (true para seleccionado, false para
+     *                 deseleccionado).
      */
     public void setSeleccionarButtonState(boolean selected) {
         btnSeleccionar.setSelected(selected);
@@ -335,7 +320,8 @@ public class BarraDeHerramientas extends JToolBar{
             panelDeColores.getPanelDeDibujo().deseleccionarFigura();
             panelDeColores.getPanelDeDibujo().repaint(); // Repintar para actualizar visualmente
         } else if (selected && panelDeColores != null && panelDeColores.getPanelDeDibujo() != null) {
-            // Si se selecciona el botón de selección, deseleccionar cualquier figura actual antes de seleccionar una nueva
+            // Si se selecciona el botón de selección, deseleccionar cualquier figura actual
+            // antes de seleccionar una nueva
             panelDeColores.getPanelDeDibujo().deseleccionarFigura();
             panelDeColores.getPanelDeDibujo().repaint(); // Repintar para actualizar visualmente
         }
@@ -347,7 +333,8 @@ public class BarraDeHerramientas extends JToolBar{
         }
     }
 
-    // Método auxiliar para deseleccionar todos los botones de herramienta excepto uno específico
+    // Método auxiliar para deseleccionar todos los botones de herramienta excepto
+    // uno específico
     private void deseleccionarOtrosBotonesHerramienta(JToggleButton botonExcluido) {
         for (Component boton : this.getComponents()) {
             if (boton instanceof JToggleButton && boton != botonExcluido) {

@@ -17,52 +17,23 @@ import javax.swing.event.ChangeListener;
  * El botón de selección ha sido movido a BarraDeHerramientas.
  */
 public class PanelDeColores extends JPanel {
-    /**
-     * Botón para abrir el selector de color del borde.
-     */
-    private final JButton botonColorBorde;
-    /**
-     * El color de borde seleccionado actualmente.
-     */
-    private Color colorBordeActual = Color.BLACK;
-    /**
-     * Botón para abrir el selector de color de relleno.
-     */
-    private JButton botonColorRelleno;
-    /**
-     * Botón para mostrar información del proyecto.
-     */
-    private JButton botonInformacion;
-    /**
-     * El color de relleno seleccionado actualmente.
-     */
-    private Color colorRellenoActual = Color.WHITE;
-    /**
-     * Casilla de verificación para habilitar/deshabilitar el relleno de formas.
-     */
-    private final JCheckBox checkRellenar;
-    /**
-     * Botón para cargar una imagen en el panel de dibujo.
-     */
-    protected JToggleButton botonCargar; // Mantenido como JToggleButton si se usa como una herramienta
 
-    /**
-     * Referencia al panel de dibujo.
-     */
+    private final JButton botonColorBorde;
+    private Color colorBordeActual = Color.BLACK;
+    private JButton botonColorRelleno;
+    private JButton botonInformacion;
+    private Color colorRellenoActual = Color.WHITE;
+    private final JCheckBox checkRellenar;
+    protected JToggleButton botonCargar;
     private PanelDeDibujo panelDeDibujo = null;
 
-    /**
-     * Referencia a la barra de herramientas para coordinar la selección de
-     * herramientas.
-     */
-    private BarraDeHerramientas barraDeHerramientas = null; // Referencia a BarraDeHerramientas
+    // Referencia a la barra de herramientas para coordinar la selección de
+    // herramientas.
+    private BarraDeHerramientas barraDeHerramientas = null;
 
-    private JSpinner grosorSpinner; // Nuevo: Spinner para el grosor
-    private int grosorActual = 1; // Nuevo: Grosor predeterminado
+    private JSpinner grosorSpinner;
+    private int grosorActual = 1;
 
-    /**
-     * Constructor del panel de colores y sus componentes.
-     */
     public PanelDeColores() {
         setLayout(new FlowLayout(FlowLayout.LEFT)); // Usar FlowLayout para la disposición de componentes.
         botonColorBorde = new JButton("Color Borde"); // Inicializar botón de color de borde.
@@ -194,13 +165,13 @@ public class PanelDeColores extends JPanel {
                 }
             }
         });
-        // El listener para el botón de selección se ha movido a BarraDeHerramientas
 
-        // Nuevo: Inicializar y configurar el JSpinner para el grosor
-        grosorSpinner = new JSpinner(new SpinnerNumberModel(grosorActual, 1, 20, 1)); // Valores: inicial, min, max,
+        // El listener para el botón de selección se ha movido a BarraDeHerramientas
+        // Inicializar y configurar el JSpinner para el grosor
+        grosorSpinner = new JSpinner(new SpinnerNumberModel(grosorActual, 1, 20, 1));
         grosorSpinner.setPreferredSize(new Dimension(50, 30)); // Ajustar tamaño
 
-        // Nuevo: Añadir un ChangeListener para capturar los cambios en el grosor
+        // Añadir un ChangeListener para capturar los cambios en el grosor
         grosorSpinner.addChangeListener(new ChangeListener() {
             @Override
             public void stateChanged(ChangeEvent e) {
@@ -208,24 +179,16 @@ public class PanelDeColores extends JPanel {
                 if (panelDeDibujo != null) {
                     panelDeDibujo.setGrosor(grosorActual); // Pasar el grosor al PanelDeDibujo
                 }
-                // No necesitamos deseleccionar aquí, el cambio de grosor no interfiere con la
-                // selección
             }
         });
 
         add(grosorSpinner); // Añadir el spinner al panel
 
-
-        // Añadir componentes al panel.
-        // add(botonColorBorde);
         formatearYAgregar(botonColorBorde, "borde.png", "Color de borde", false);
         formatearYAgregar(botonColorRelleno, "relleno.png", "Color de relleno", false);
         add(checkRellenar);
         formatearYAgregar(botonInformacion, "informacion.png", "Infotmacion", false);
         formatearYAgregar(botonCargar, "subirImagen.png", "Cargar Imagen", false);
-
-        // Nota: Necesitarás añadir los botones de Copiar y Pegar aquí también en un
-        // paso posterior.
     }
 
     // Método formatearYAgregar modificado para incluir si es un botón de figura
@@ -282,9 +245,6 @@ public class PanelDeColores extends JPanel {
         this.barraDeHerramientas = barraDeHerramientas;
     }
 
-    /**
-     * Muestra información sobre el proyecto en un cuadro de diálogo de mensaje.
-     */
     private void mostrarInformacionProyecto() {
         String mensaje = "Descripción del Proyecto:\n" +
                 "Este proyecto es una aplicación de dibujo llamada \"Paint 2025-10\", que permite\n" +
@@ -334,8 +294,8 @@ public class PanelDeColores extends JPanel {
         return checkRellenar.isSelected();
     }
 
-    // Nuevo: Método getter para acceder al grosor actual
-     public int getGrosorActual() {
-         return grosorActual;
-     }
+    // Método getter para acceder al grosor actual
+    public int getGrosorActual() {
+        return grosorActual;
+    }
 }

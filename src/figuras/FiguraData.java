@@ -1,38 +1,31 @@
-package figuras; // Asumiendo que FiguraData estará en el mismo paquete que tus figuras
+package figuras;
 
 import java.awt.*;
 import java.io.Serializable;
 import java.util.ArrayList;
 
-/**
- * Clase para almacenar los datos de una figura de manera serializable,
- * permitiendo su transferencia a través del portapapeles.
- * Contiene campos para los datos comunes a varias figuras.
- */
 public class FiguraData implements Serializable {
-    private static final long serialVersionUID = 2L; // Incrementado el serialVersionUID tras modificaciones
+    private static final long serialVersionUID = 2L;
 
-    private String tipoFigura; // Para identificar el tipo de figura (e.g., "Linea", "Rectangulo")
+    private String tipoFigura;
     private Point puntoInicial;
-    private Point puntoFinal; // Utilizado por figuras basadas en dos puntos (Rectangulo, Ovalo, Linea, etc.)
-    private Point centro; // Utilizado por figuras basadas en un centro y radio/punto de referencia (Circulo, Poligonos, Estrella)
-    private ArrayList<Point> puntosTrazo; // Utilizado para DibujoLibre o Lapiz
+    private Point puntoFinal;
+    private Point centro;
+    private ArrayList<Point> puntosTrazo;
     private Color colorDePrimerPlano;
     private Color colorDeRelleno;
     private boolean estaRelleno;
-    private int tamanoBorrador; // Específico para Borrador, si decides copiarlo
+    private int tamanoBorrador;
     private int grosor;
 
     /**
-     * Constructor básico de FiguraData.
      * @param tipoFigura El nombre del tipo de figura (e.g., "Rectangulo").
      */
     public FiguraData(String tipoFigura) {
         this.tipoFigura = tipoFigura;
-        this.puntosTrazo = new ArrayList<>(); // Inicializar lista de puntos por si acaso
+        this.puntosTrazo = new ArrayList<>();
     }
 
-    // --- Getters ---
     public String getTipoFigura() {
         return tipoFigura;
     }
@@ -69,7 +62,6 @@ public class FiguraData implements Serializable {
         return tamanoBorrador;
     }
 
-    // --- Setters (para ser usados al crear FiguraData desde un objeto Figura) ---
     public void setPuntoInicial(Point puntoInicial) {
         this.puntoInicial = puntoInicial;
     }
@@ -83,7 +75,6 @@ public class FiguraData implements Serializable {
     }
 
     public void setPuntosTrazo(ArrayList<Point> puntosTrazo) {
-        // Crear una copia para evitar referencias directas si la lista original cambia
         this.puntosTrazo = new ArrayList<>(puntosTrazo);
     }
 
@@ -103,7 +94,6 @@ public class FiguraData implements Serializable {
         this.tamanoBorrador = tamanoBorrador;
     }
 
-    // Método de ayuda para depuración
     @Override
     public String toString() {
         return "FiguraData{" +
@@ -118,6 +108,11 @@ public class FiguraData implements Serializable {
                 '}';
     }
 
-    public int getGrosor() { return grosor; }
-    public void setGrosor(int grosor) { this.grosor = grosor; }
+    public int getGrosor() {
+        return grosor;
+    }
+
+    public void setGrosor(int grosor) {
+        this.grosor = grosor;
+    }
 }

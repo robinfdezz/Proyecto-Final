@@ -12,45 +12,35 @@ public abstract class Figura implements Serializable {
     protected Color colorDePrimerPlano = Color.BLACK;
     protected boolean relleno = false;
     public Color colorDeRelleno;
-    protected List<Point> puntos = new ArrayList<>();  // Usar una lista de puntos
+    protected List<Point> puntos = new ArrayList<>();
     protected int grosor;
 
-
-    // Constructores
     public Figura() {
         this.grosor = 1;
-    } // Constructor por defecto
+    }
 
     public Figura(Point... puntosIniciales) {
         this.grosor = 1;
         puntos.addAll(Arrays.asList(puntosIniciales));
     }
 
-    // Métodos para acceder y modificar puntos
     public Point getPunto(int index) {
         if (index >= 0 && index < puntos.size()) {
             return puntos.get(index);
         }
-        return null; // O lanzar una excepción, dependiendo de cómo quieras manejar errores
+        return null;
     }
 
     public void setPunto(int index, Point p) {
         if (index >= 0 && index < puntos.size()) {
             puntos.set(index, p);
         }
-        // Puedes agregar un 'else' aquí para manejar índices fuera de rango
     }
 
-    // Métodos abstractos
     public abstract void dibujar(Graphics g);
 
     public abstract void actualizar(Point puntoActual);
 
-    // Métodos para establecer propiedades (color, relleno) - Sin cambios
-
-    // Métodos getter para color y relleno - Sin cambios
-
-    // Métodos getBounds() y translate() - A MODIFICAR
     public Rectangle getBounds() {
         if (puntos.isEmpty()) {
             return null;
@@ -80,7 +70,6 @@ public abstract class Figura implements Serializable {
     public abstract FiguraData getFiguraData();
 
     public boolean contains(Point p) {
-        // Implementación por defecto, puede necesitar ser sobrescrita
         if (puntos.isEmpty()) {
             return false;
         }
@@ -94,25 +83,21 @@ public abstract class Figura implements Serializable {
         return false;
     }
 
-public void setColorDePrimerPlano(Color colorBordeActual) {
-    this.colorDePrimerPlano = colorBordeActual;
-}
-
-    // public boolean isRelleno() {
-    //     return false;
-    // }
+    public void setColorDePrimerPlano(Color colorBordeActual) {
+        this.colorDePrimerPlano = colorBordeActual;
+    }
 
     public boolean isRelleno() {
-    return this.relleno;
-}
+        return this.relleno;
+    }
 
-public void setColorDeRelleno(Color colorRellenoActual) {
-    this.colorDeRelleno = colorRellenoActual;
-}
+    public void setColorDeRelleno(Color colorRellenoActual) {
+        this.colorDeRelleno = colorRellenoActual;
+    }
 
-public void setRelleno(boolean relleno) {
-    this.relleno = relleno;
-}
+    public void setRelleno(boolean relleno) {
+        this.relleno = relleno;
+    }
 
     public void setGrosor(int grosor) {
         this.grosor = grosor;

@@ -15,37 +15,23 @@ import java.util.Stack;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 
-/**
- * Clase PanelDeDibujo - Representa el lienzo de dibujo donde se dibujan las
- * figuras.
- * Maneja los eventos del ratón para crear y modificar figuras y gestiona la
- * lista de figuras.
- * Incluye funcionalidad para Undo, Redo, y Clear. Ahora soporta las figuras
- * Corazon y Trapecio.
- * Se ha añadido lógica básica para seleccionar figuras.
- */
 public class PanelDeDibujo extends JPanel implements HerramientaSeleccionadaListener {
-    private Figura figuraActual; // La figura que se está dibujando o modificando actualmente.
-    private List<Figura> figuras = new ArrayList<>(); // Lista para almacenar todas las figuras dibujadas.
-    private Stack<Figura> figurasDeshechas = new Stack<>(); // Pila para almacenar figuras deshechas para la
-                                                            // funcionalidad de rehacer.
-    PanelDeColores panelDeColores; // Referencia al panel de colores para obtener la configuración actual de
-                                   // color/relleno.
-    BarraDeHerramientas barraDeHerramientas; // Referencia a la barra de herramientas para obtener la herramienta
-                                             // seleccionada.
+    private Figura figuraActual;
+    private List<Figura> figuras = new ArrayList<>();
+    private Stack<Figura> figurasDeshechas = new Stack<>();
+
+    PanelDeColores panelDeColores; // Referencia al panel de colores para obtener la configuración actual de color/relleno.
+    BarraDeHerramientas barraDeHerramientas; // Referencia a la barra de herramientas para obtener la herramienta seleccionada.
+
     private BufferedImage imagenDeFondo; // Imagen de fondo para el lienzo.
-
-    private Figura figuraSeleccionada = null; // Variable para mantener la figura seleccionada1
-
+    private Figura figuraSeleccionada = null;
     private Cursor cursorDibujoGeneral;
     private Cursor cursorBorrador;
     private Cursor cursorLataPintura;
     private Cursor cursorSeleccionar;
     private Cursor cursorEliminar;
-
-    // Añadir esta variable como miembro de la clase PanelDeDibujo
     private Point puntoInicialArrastre = null;
-    private int grosor = 1; // Nuevo: Grosor de la línea (valor predeterminado)
+    private int grosor = 1;
 
     /**
      * Constructor del panel de dibujo.
@@ -79,21 +65,18 @@ public class PanelDeDibujo extends JPanel implements HerramientaSeleccionadaList
 
         } catch (IOException e) {
             System.err.println("Error al cargar las imágenes de los cursores: " + e.getMessage());
-            // Cursores por defecto como respaldo
             cursorDibujoGeneral = Cursor.getDefaultCursor();
             cursorBorrador = Cursor.getDefaultCursor();
             cursorLataPintura = Cursor.getDefaultCursor();
             cursorSeleccionar = Cursor.getDefaultCursor();
-            cursorEliminar = Cursor.getDefaultCursor(); // Cursores por defecto como respaldo
+            cursorEliminar = Cursor.getDefaultCursor();
         }
-
-        barraDeHerramientas.setHerramientaSeleccionadaListener(this); // Registrarse como listener - NUEVO
-
+        barraDeHerramientas.setHerramientaSeleccionadaListener(this); 
     }
 
     // --- Implementación del listener para cursores---
     @Override
-    public void herramientaSeleccionadaCambio(String nuevaHerramienta) { // NUEVO
+    public void herramientaSeleccionadaCambio(String nuevaHerramienta) {
         actualizarCursor(nuevaHerramienta);
     }
 
@@ -155,25 +138,22 @@ public class PanelDeDibujo extends JPanel implements HerramientaSeleccionadaList
                 // Obtener la herramienta seleccionada de la barra de herramientas
                 String herramienta = barraDeHerramientas.getHerramientaSeleccionada();
 
-                // --- Lógica de la Color de relleno ---
+                // --- Logica de la Color de relleno ---
                 if ("Color de relleno".equals(herramienta)) {
                     Figura figuraClickeada = getFiguraEnPunto(e.getPoint());
                     if (figuraClickeada != null) {
                         figuraClickeada.setColorDeRelleno(panelDeColores.getColorRellenoActual());
-                        figuraClickeada.setRelleno(panelDeColores.isRellenar()); // Usar el estado de la casilla
+                        figuraClickeada.setRelleno(panelDeColores.isRellenar());
                         repaint();
                     }
-                    return; // ¡MUY IMPORTANTE! No crear una nueva figura
+                    return;
                 }
 
                 // --- Lógica de Selección ---
-
                 if ("Seleccionar Figura".equals(herramienta)) {
                     Figura figuraClickeada = getFiguraEnPunto(e.getPoint());
-
                     if (figuraClickeada != null) {
                         figuraSeleccionada = figuraClickeada;
-                        // Almacenar el desplazamiento inicial
                         puntoInicialArrastre = new Point(e.getPoint().x - figuraSeleccionada.getBounds().x,
                                 e.getPoint().y - figuraSeleccionada.getBounds().y);
                         System.out.println("Figura seleccionada: " + figuraSeleccionada.getClass().getSimpleName());
@@ -185,33 +165,23 @@ public class PanelDeDibujo extends JPanel implements HerramientaSeleccionadaList
                     repaint();
                     return;
                 }
+                // --- Fin Lógica de Selección ---
 
-                // *** NUEVA LÓGICA PARA ELIMINAR FIGURA ***
+
             if ("Eliminar Figura".equals(herramienta)) {
                 Figura figuraClickeada = getFiguraEnPunto(e.getPoint());
                 if (figuraClickeada != null) {
-                    figuras.remove(figuraClickeada); // Eliminar la figura de la lista
-                    figurasDeshechas.clear(); // Limpiar el rehacer, ya que se modifica la lista
-                    repaint(); // Repintar para mostrar el cambio
+                    figuras.remove(figuraClickeada);
+                    figurasDeshechas.clear();
+                    repaint();
                 }
-                return; // ¡IMPORTANTE! No crear una nueva figura
+                return;
             }
 
-                // --- Fin Lógica de Selección ---
-
-                // Si la herramienta es el Borrador, creamos y añadimos una instancia
-                // inmediatamente
                 if ("Borrador".equals(herramienta)) {
-                    // Deseleccionar cualquier figura si empezamos a borrar
                     figuraSeleccionada = null;
-                    // La instancia de Borrador se crea y añade en mouseDragged para un borrado
-                    // continuo.
-                    // Simplemente nos aseguramos de que el modo de borrado está activo y salimos,
-                    // el mouseDragged se encargará de añadir las "marcas" del borrador.
-                    figurasDeshechas.clear(); // Limpiar rehacer al iniciar un trazo de borrador
-                    // No creamos figuraActual = new Borrador(e.getPoint()); aquí en mousePressed,
-                    // ya que mouseDragged lo hará repetidamente.
-                    return; // Salir, mouseDragged manejará el resto
+                    figurasDeshechas.clear();
+                    return;
                 }
 
                 // --- Lógica de Dibujo Normal para otras herramientas (Línea, Rectángulo, etc.)
@@ -224,33 +194,15 @@ public class PanelDeDibujo extends JPanel implements HerramientaSeleccionadaList
                 // instancia.
                 figuraActual = obtenerFiguraADibujar(e.getPoint());
 
-                // // Si la figura actual no es nula (es decir, es una herramienta de dibujo)
-                // if (figuraActual != null) {
-                //     // Usamos los colores y estado de relleno DEL PANEL DE COLORES
-                //     figuraActual.setColorDePrimerPlano(panelDeColores.getColorBordeActual());
-                //     figuraActual.setColorDeRelleno(panelDeColores.getColorRellenoActual());
-                //     figuraActual.setRelleno(panelDeColores.isRellenar()); // ¡Asegúrate de esto!
-                //     figuraActual.setGrosor(grosor); // <--- ESTABLECER EL GROSOR DE LA FIGURA
-                //     System.out.println("Rellenar: " + panelDeColores.isRellenar() + ", Color Relleno: "
-                //             + panelDeColores.getColorRellenoActual()); // *** AÑADIR ESTO ***
-
-                //     figuras.add(figuraActual); // Añadir la nueva figura a la lista.
-                //     figurasDeshechas.clear(); // Limpiar la pila de rehacer cuando se dibuja una nueva figura.
-                //     repaint(); // Repintar el panel para mostrar la nueva figura.
-                // }
-
                 if (figuraActual != null) {
                     figuraActual.setColorDePrimerPlano(panelDeColores.getColorBordeActual());
                     figuraActual.setColorDeRelleno(panelDeColores.getColorRellenoActual());
                     figuraActual.setRelleno(panelDeColores.isRellenar());
-                    figuraActual.setGrosor(grosor); // <--- ESTABLECER EL GROSOR DE LA FIGURA
+                    figuraActual.setGrosor(grosor);
                     figuras.add(figuraActual);
                     figurasDeshechas.clear();
                     repaint();
                 }
-
-                // --- Fin Lógica de Dibujo Normal ---
-
             }
 
             /**
@@ -263,10 +215,8 @@ public class PanelDeDibujo extends JPanel implements HerramientaSeleccionadaList
             public void mouseReleased(MouseEvent e) {
                 String herramienta = barraDeHerramientas.getHerramientaSeleccionada();
                 if (!"Borrador".equals(herramienta) && !"Seleccionar Figura".equals(herramienta)) {
-                    figuraActual = null; // Restablecer la figura actual después de completar el dibujo (solo para
-                                         // figuras de dibujo).
+                    figuraActual = null;
                 }
-                // Limpiar el punto de inicio del arrastre
                 puntoInicialArrastre = null;
             }
 
@@ -283,6 +233,15 @@ public class PanelDeDibujo extends JPanel implements HerramientaSeleccionadaList
             public void mouseDragged(MouseEvent e) {
                 String herramienta = barraDeHerramientas.getHerramientaSeleccionada();
 
+                if ("Eliminar Figura".equals(herramienta)) {
+             Figura figuraClickeada = getFiguraEnPunto(e.getPoint());
+             if (figuraClickeada != null) {
+                 figuras.remove(figuraClickeada);
+                 figurasDeshechas.clear();
+                 repaint();
+             }
+             return;
+         }
                 if ("Seleccionar Figura".equals(herramienta) && figuraSeleccionada != null) {
                     // Calcular la nueva posición de la figura
                     int nuevaX = e.getPoint().x - puntoInicialArrastre.x;
@@ -300,24 +259,12 @@ public class PanelDeDibujo extends JPanel implements HerramientaSeleccionadaList
                 }
 
                 if ("Borrador".equals(herramienta)) {
-                    // Para el borrador, creamos y añadimos una nueva instancia en cada arrastre
                     figuraActual = new Borrador(e.getPoint());
-                    // El tamaño del borrador podría controlarse aquí si tu PanelDeColores tuviera
-                    // esa opción
-                    // ((Borrador) figuraActual).setTamano(tamañoSeleccionado);
                     figuras.add(figuraActual);
-                    // No limpiar figurasDeshechas aquí, solo en mousePressed cuando se inicia un
-                    // nuevo trazo de borrador,
-                    // o cuando se inicia una nueva figura no borrador.
-                    // figurasDeshechas.clear(); // Limpiar la pila de rehacer al usar el borrador -
-                    // se hace en mousePressed ahora.
-
                 } else if (figuraActual != null && !"Seleccionar Figura".equals(herramienta)) {
-                    // Si estamos dibujando una figura normal y NO estamos en modo selección,
-                    // actualizarla.
                     figuraActual.actualizar(e.getPoint());
                 }
-                repaint(); // Repintar el panel para mostrar la figura actualizada.
+                repaint();
             }
         });
     }
@@ -343,7 +290,7 @@ public class PanelDeDibujo extends JPanel implements HerramientaSeleccionadaList
                 return figura; // Devolver la primera figura encontrada (la superior)
             }
         }
-        return null; // No se encontró ninguna figura en el punto dado
+        return null;
     }
 
     /**
@@ -355,8 +302,7 @@ public class PanelDeDibujo extends JPanel implements HerramientaSeleccionadaList
      * @return Un nuevo objeto Figura del tipo seleccionado.
      */
     private Figura obtenerFiguraADibujar(Point punto) {
-        String herramienta = barraDeHerramientas.getHerramientaSeleccionada(); // Obtener el nombre de la herramienta
-                                                                               // seleccionada.
+        String herramienta = barraDeHerramientas.getHerramientaSeleccionada(); // Obtener el nombre de la herramienta seleccionada.
 
         // Crear una nueva instancia de figura basada en la herramienta seleccionada.
         switch (herramienta) {
@@ -365,10 +311,7 @@ public class PanelDeDibujo extends JPanel implements HerramientaSeleccionadaList
             case "Rectángulo":
                 return new Rectangulo(punto);
             case "Borrador":
-                // La instancia de Borrador se crea y añade en mouseDragged para un borrado
-                // continuo
-                return new Borrador(punto); // Aunque ya lo manejamos antes, lo mantenemos aquí por consistencia si se
-                                            // llama directamente.
+                return new Borrador(punto);
             case "Óvalo":
                 return new Ovalo(punto);
             case "Círculo":
@@ -395,11 +338,11 @@ public class PanelDeDibujo extends JPanel implements HerramientaSeleccionadaList
                 return new Trapecio(punto);
             case "Semicirculo":
                 return new Semicirculo(punto);
-            case "Ring": // Corregido para instanciar Ring
+            case "Ring":
                 return new Ring(punto);
             case "Dibujo Libre":
             default:
-                return new DibujoLibre(punto); // Por defecto, dibujo libre (Lapiz)
+                return new DibujoLibre(punto);
         }
     }
 
@@ -417,8 +360,7 @@ public class PanelDeDibujo extends JPanel implements HerramientaSeleccionadaList
             g.drawImage(imagenDeFondo, 0, 0, this);
         }
 
-        Graphics2D g2d = (Graphics2D) g; // Obtener Graphics2D para el grosor
-        //g2d.setStroke(new BasicStroke(grosor)); // Establecer el grosor del trazo
+        Graphics2D g2d = (Graphics2D) g; // Obtener Graphics2D para el grosor g2d.setStroke(new BasicStroke(grosor)); // Establecer el grosor del trazo
 
         for (Figura figura : figuras) {
             figura.dibujar(g2d); // Usar g2d para dibujar
@@ -432,13 +374,11 @@ public class PanelDeDibujo extends JPanel implements HerramientaSeleccionadaList
                 if (bounds != null) {
                     g2d.drawRect(bounds.x - 2, bounds.y - 2, bounds.width + 4, bounds.height + 4);                                                                              // más grande
                 }
-                // Nota: Para DibujoLibre/Lapiz, necesitarías acceder a la lista de puntos y
-                // calcular el bounding box en su getBounds().
 
                 g2d.setStroke(originalStroke); // Restaurar el stroke original
             }
         }
-        g2d.setStroke(new BasicStroke(1)); // Restablecer el grosor después de dibujar
+        g2d.setStroke(new BasicStroke(1));
     }
 
     /**
@@ -463,14 +403,13 @@ public class PanelDeDibujo extends JPanel implements HerramientaSeleccionadaList
             }
             Figura figuraDeshecha = figuras.remove(figuras.size() - 1); // Eliminar la última figura.
             figurasDeshechas.push(figuraDeshecha); // Empujar la figura deshecha a la pila de rehacer.
-            repaint(); // Repintar el panel.
+            repaint();
         }
     }
 
     /**
      * Rehace la última acción de dibujo deshecha moviendo una figura de la pila de
-     * rehacer
-     * de vuelta a la lista principal de figuras.
+     * rehacer de vuelta a la lista principal de figuras.
      */
     public void redo() {
         if (!figurasDeshechas.isEmpty()) {
@@ -478,9 +417,6 @@ public class PanelDeDibujo extends JPanel implements HerramientaSeleccionadaList
             figuras.add(figuraRehecha); // Añadir la figura de vuelta a la lista principal.
             repaint(); // Repintar el panel.
         }
-        // Nota: Si se añade una nueva figura después de rehacer, la pila
-        // figurasDeshechas se limpia
-        // en mousePressed o mouseDragged (para el borrador).
     }
 
     /**
@@ -500,20 +436,16 @@ public class PanelDeDibujo extends JPanel implements HerramientaSeleccionadaList
         return figuraSeleccionada;
     }
 
-    // Método para añadir una figura (útil para pegar)
+    // Método para añadir una figura
     public void addFigura(Figura figura) {
         figuras.add(figura);
-        figurasDeshechas.clear(); // Limpiar rehacer al pegar
-        // No seleccionar la figura pegada por defecto, pero podrías hacerlo si
-        // quisieras:
-        // this.figuraSeleccionada = figura;
+        figurasDeshechas.clear();
         repaint();
     }
 
     // Método para deseleccionar la figura actual
     public void deseleccionarFigura() {
         this.figuraSeleccionada = null;
-        // No repintamos aquí, se espera que la llamada que usa este método lo haga.
     }
 
     /**

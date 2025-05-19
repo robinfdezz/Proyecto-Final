@@ -2,27 +2,21 @@ package figuras;
 
 import java.awt.*;
 
-
-/**
- * Representa una forma de rectángulo.
- * Puede ser dibujado con un contorno y rellenado con un color separado.
- */
 public class Rectangulo extends Figura {
-    private Point puntoInicial; // El punto de inicio (típicamente la ubicación donde se presionó el ratón).
-    private Point puntoFinal; // El punto final (típicamente la ubicación donde se soltó el ratón).
+    private Point puntoInicial;
+    private Point puntoFinal;
 
     /**
-     * Constructor de un Rectángulo con un punto inicial dado.
      * @param puntoInicial El punto inicial del rectángulo.
      */
     public Rectangulo(Point puntoInicial) {
         this.puntoInicial = puntoInicial;
-        this.puntoFinal = puntoInicial; // Inicialmente igual al punto inicial.
+        this.puntoFinal = puntoInicial;
     }
 
     /**
-     * Actualiza el punto final para determinar el tamaño y la posición del rectángulo.
-     * @param puntoFinal El punto actual (típicamente la ubicación mientras se arrastra el ratón).
+     * @param puntoFinal El punto actual (típicamente la ubicación mientras se
+     *                   arrastra el ratón).
      */
     @Override
     public void actualizar(Point puntoFinal) {
@@ -30,28 +24,23 @@ public class Rectangulo extends Figura {
     }
 
     /**
-     * Dibuja el rectángulo en el contexto gráfico dado.
-     * Dibuja un rectángulo relleno si 'relleno' es true, y un contorno de rectángulo.
      * @param g El objeto Graphics sobre el que dibujar.
      */
     @Override
     public void dibujar(Graphics g) {
-        //g.setColor(colorDePrimerPlano); // Establecer el color para el contorno.
-        Graphics2D g2d = (Graphics2D) g; // Castear a Graphics2D
+        Graphics2D g2d = (Graphics2D) g;
         g2d.setColor(colorDePrimerPlano);
-        g2d.setStroke(new BasicStroke(this.grosor)); // Establecer el grosor
-        
-        // Calcular las coordenadas de la esquina superior izquierda, el ancho y la altura del rectángulo.
+        g2d.setStroke(new BasicStroke(this.grosor));
+
         int x = Math.min(puntoInicial.x, puntoFinal.x);
         int y = Math.min(puntoInicial.y, puntoFinal.y);
         int width = Math.abs(puntoFinal.x - puntoInicial.x);
         int height = Math.abs(puntoFinal.y - puntoInicial.y);
 
-        if (relleno) { // Verificar si el relleno está habilitado.
+        if (relleno) {
             g2d.setColor(colorDeRelleno);
             g2d.fillRect(x, y, width, height);
 
-            // Dibujar el borde si hay un color diferente.
             if (colorDeRelleno != colorDePrimerPlano) {
                 g2d.setColor(colorDePrimerPlano);
                 g2d.drawRect(x, y, width, height);
@@ -65,16 +54,14 @@ public class Rectangulo extends Figura {
     public FiguraData getFiguraData() {
         FiguraData data = new FiguraData("Rectangulo");
         data.setPuntoInicial(this.puntoInicial);
-        data.setPuntoFinal(this.puntoFinal); // Para rectángulos, puntoInicial y puntoFinal definen el tamaño/posición
+        data.setPuntoFinal(this.puntoFinal);
         data.setColorDePrimerPlano(this.colorDePrimerPlano);
         data.setColorDeRelleno(this.colorDeRelleno);
         data.setEstaRelleno(this.relleno);
-        data.setGrosor(this.grosor);  // Guardar el grosor
-        // No tiene sentido para Rectangulo setear centro, puntosTrazo o tamanoBorrador
+        data.setGrosor(this.grosor);
         return data;
     }
 
-    // Implementación de contains para Rectángulo (más precisa)
     @Override
     public boolean contains(Point p) {
         int x = Math.min(puntoInicial.x, puntoFinal.x);
@@ -94,13 +81,12 @@ public class Rectangulo extends Figura {
     }
 
     @Override
-public void translate(Point offset) {
-    if (puntoInicial != null) {
-        puntoInicial.translate(offset.x, offset.y);
-    }
-    if (puntoFinal != null) {
-        puntoFinal.translate(offset.x, offset.y);
+    public void translate(Point offset) {
+        if (puntoInicial != null) {
+            puntoInicial.translate(offset.x, offset.y);
+        }
+        if (puntoFinal != null) {
+            puntoFinal.translate(offset.x, offset.y);
+        }
     }
 }
-}
-

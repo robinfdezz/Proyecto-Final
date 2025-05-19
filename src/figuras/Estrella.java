@@ -1,20 +1,12 @@
 package figuras;
 
-//import javafx.scene.shape.Rectangle;
-
 import java.awt.*;
 import java.util.ArrayList;
 
-/**
- * Representa una forma de estrella.
- * Puede ser dibujado con un contorno y rellenado con un color separado.
- * autor carol
- */
 public class Estrella extends Figura {
-    private int puntas = 5; // Número de puntas de la estrella.
+    private int puntas = 5;
 
     /**
-     * Constructor de una Estrella con un punto central dado.
      * @param centro El punto central inicial de la estrella.
      */
     public Estrella(Point centro) {
@@ -22,7 +14,6 @@ public class Estrella extends Figura {
     }
 
     /**
-     * Actualiza el punto de referencia que determina el tamaño y la orientación de la estrella.
      * @param nuevoPunto El nuevo punto de referencia.
      */
     @Override
@@ -31,46 +22,38 @@ public class Estrella extends Figura {
     }
 
     /**
-     * Dibuja la estrella en el contexto gráfico dado.
-     * Calcula los vértices de la estrella basado en el centro y el punto de referencia.
      * @param g El objeto Graphics sobre el que dibujar.
      */
     @Override
     public void dibujar(Graphics g) {
-        // Establecer el color del borde
         Graphics2D g2 = (Graphics2D) g;
         g2.setColor(colorDePrimerPlano);
-        g2.setStroke(new BasicStroke(this.grosor)); // Establecer el grosor
+        g2.setStroke(new BasicStroke(this.grosor));
 
-        // Calcular el radio
-        int radio = (int) getPunto(0).distance(getPunto(1)); // Calcular el radio exterior.
-        int[] puntosX = new int[puntas * 2]; // Arreglo para almacenar las coordenadas x de los vértices.
-        int[] puntosY = new int[puntas * 2]; // Arreglo para almacenar las coordenadas y de los vértices.
+        int radio = (int) getPunto(0).distance(getPunto(1));
+        int[] puntosX = new int[puntas * 2];
+        int[] puntosY = new int[puntas * 2];
 
-        // Calcular coordenadas de los vértices
         for (int i = 0; i < puntas * 2; i++) {
-            double angulo = Math.toRadians(-90 + i * (360.0 / (puntas * 2))); // Calcular el ángulo para cada vértice. Comienza a -90 grados (hacia arriba).
-            int radioActual = (i % 2 == 0) ? radio : (int) (radio * 0.5); // Alternar entre radio exterior e interior.
-            puntosX[i] = getPunto(0).x + (int) (radioActual * Math.cos(angulo)); // Calcular coordenada x.
-            puntosY[i] = getPunto(0).y + (int) (radioActual * Math.sin(angulo)); // Calcular coordenada y.
+            double angulo = Math.toRadians(-90 + i * (360.0 / (puntas * 2)));
+            int radioActual = (i % 2 == 0) ? radio : (int) (radio * 0.5);
+            puntosX[i] = getPunto(0).x + (int) (radioActual * Math.cos(angulo));
+            puntosY[i] = getPunto(0).y + (int) (radioActual * Math.sin(angulo));
         }
 
-        Polygon estrellaForma = new Polygon(puntosX, puntosY, puntas * 2); // Crear un objeto Polygon para la estrella.
+        Polygon estrellaForma = new Polygon(puntosX, puntosY, puntas * 2);
 
-        // Manejar el relleno
-        if (relleno) { // Verificar si el relleno está habilitado.
+        if (relleno) {
             if (colorDeRelleno != null) {
-                g2.setColor(colorDeRelleno); // Establecer el color de relleno.
-                g.fillPolygon(estrellaForma); // Dibujar la estrella rellena.
+                g2.setColor(colorDeRelleno);
+                g.fillPolygon(estrellaForma);
             }
 
-            // Dibujar el borde solo si es diferente del color de relleno.
             if (colorDeRelleno != colorDePrimerPlano) {
-                g2.setColor(colorDePrimerPlano); // Restablecer el color al color de borde.
-                g2.drawPolygon(estrellaForma); // Dibujar el contorno.
+                g2.setColor(colorDePrimerPlano);
+                g2.drawPolygon(estrellaForma);
             }
         } else {
-            // Si no hay relleno, solo dibujar el contorno.
             g2.drawPolygon(estrellaForma);
         }
     }
@@ -99,49 +82,51 @@ public class Estrella extends Figura {
         for (int i = 0; i < puntas * 2; i++) {
             double angle = Math.toRadians(-90 + i * (360.0 / (puntas * 2)));
             int radioActual = (i % 2 == 0) ? radio : (int) (radio * 0.5);
-            vertices.add(new Point(getPunto(0).x + (int) (radioActual * Math.cos(angle)), getPunto(0).y + (int) (radioActual * Math.sin(angle))));
+            vertices.add(new Point(getPunto(0).x + (int) (radioActual * Math.cos(angle)),
+                    getPunto(0).y + (int) (radioActual * Math.sin(angle))));
         }
 
-        // Ray casting algorithm to check if the point is inside the polygon
         boolean inside = false;
         for (int i = 0, j = vertices.size() - 1; i < vertices.size(); j = i++) {
             if ((vertices.get(i).y > p.y) != (vertices.get(j).y > p.y) &&
-                    (p.x < (vertices.get(j).x - vertices.get(i).x) * (p.y - vertices.get(i).y) / (vertices.get(j).y - vertices.get(i).y) + vertices.get(i).x)) {
+                    (p.x < (vertices.get(j).x - vertices.get(i).x) * (p.y - vertices.get(i).y)
+                            / (vertices.get(j).y - vertices.get(i).y) + vertices.get(i).x)) {
                 inside = !inside;
             }
         }
         return inside;
     }
 
-@Override
- public java.awt.Rectangle getBounds() {
-  if (puntos.size() < 2 || getPunto(0) == null || getPunto(1) == null) return null;
+    @Override
+    public java.awt.Rectangle getBounds() {
+        if (puntos.size() < 2 || getPunto(0) == null || getPunto(1) == null)
+            return null;
 
-  int radio = (int) getPunto(0).distance(getPunto(1));
-  int[] puntosX = new int[puntas * 2];
-  int[] puntosY = new int[puntas * 2];
+        int radio = (int) getPunto(0).distance(getPunto(1));
+        int[] puntosX = new int[puntas * 2];
+        int[] puntosY = new int[puntas * 2];
 
-  for (int i = 0; i < puntas * 2; i++) {
-   double angulo = Math.toRadians(-90 + i * (360.0 / (puntas * 2)));
-   int radioActual = (i % 2 == 0) ? radio : (int) (radio * 0.5);
-   puntosX[i] = getPunto(0).x + (int) (radioActual * Math.cos(angulo));
-   puntosY[i] = getPunto(0).y + (int) (radioActual * Math.sin(angulo));
-  }
+        for (int i = 0; i < puntas * 2; i++) {
+            double angulo = Math.toRadians(-90 + i * (360.0 / (puntas * 2)));
+            int radioActual = (i % 2 == 0) ? radio : (int) (radio * 0.5);
+            puntosX[i] = getPunto(0).x + (int) (radioActual * Math.cos(angulo));
+            puntosY[i] = getPunto(0).y + (int) (radioActual * Math.sin(angulo));
+        }
 
-  int minX = puntosX[0];
-  int minY = puntosY[0];
-  int maxX = puntosX[0];
-  int maxY = puntosY[0];
+        int minX = puntosX[0];
+        int minY = puntosY[0];
+        int maxX = puntosX[0];
+        int maxY = puntosY[0];
 
-  for (int i = 1; i < puntosX.length; i++) {
-   minX = Math.min(minX, puntosX[i]);
-   minY = Math.min(minY, puntosY[i]);
-   maxX = Math.max(maxX, puntosX[i]);
-   maxY = Math.max(maxY, puntosY[i]);
-  }
+        for (int i = 1; i < puntosX.length; i++) {
+            minX = Math.min(minX, puntosX[i]);
+            minY = Math.min(minY, puntosY[i]);
+            maxX = Math.max(maxX, puntosX[i]);
+            maxY = Math.max(maxY, puntosY[i]);
+        }
 
-  return new java.awt.Rectangle(minX, minY, maxX - minX, maxY - minY);
- }
+        return new java.awt.Rectangle(minX, minY, maxX - minX, maxY - minY);
+    }
 
     @Override
     public void translate(Point offset) {

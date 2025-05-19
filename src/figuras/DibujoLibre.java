@@ -3,43 +3,34 @@ package figuras;
 import java.awt.*;
 import java.util.ArrayList;
 
-/**
- * Representa una herramienta de dibujo a mano alzada.
- * Captura una serie de puntos mientras se arrastra el ratón y dibuja líneas entre ellos.
- */
 public class DibujoLibre extends Figura {
-    // ArrayList<Point> puntos = new ArrayList<>(); // Lista para almacenar los puntos del dibujo a mano alzada.
 
     /**
-     * Constructor de un DibujoLibre (Dibujo Libre) que comienza en un punto dado.
      * @param puntoInicial El punto inicial del dibujo a mano alzada.
      */
     public DibujoLibre(Point puntoInicial) {
-        super(puntoInicial); // Llama al constructor de Figura con el punto inicial
+        super(puntoInicial);
     }
 
     /**
-     * Dibuja el trazo a mano alzada conectando los puntos en la lista con líneas.
      * @param g El objeto Graphics sobre el que dibujar.
      */
     @Override
     public void dibujar(Graphics g) {
-        Graphics2D g2d = (Graphics2D) g; // Castear a Graphics2D
+        Graphics2D g2d = (Graphics2D) g;
         g2d.setColor(colorDePrimerPlano);
-        g2d.setStroke(new BasicStroke(this.grosor)); // Establecer el grosor
+        g2d.setStroke(new BasicStroke(this.grosor));
 
         if (puntos.size() < 2) {
-            // Si solo hay un punto o ninguno, no hay línea que dibujar
             if (puntos.size() == 1 && getPunto(0) != null) {
                 g2d.fillRect(getPunto(0).x, getPunto(0).y, 1, 1);
             }
             return;
         }
 
-        // Dibujar líneas entre puntos consecutivos.
         for (int i = 1; i < puntos.size(); i++) {
-            Point p1 = getPunto(i - 1); // Obtener el punto anterior.
-            Point p2 = getPunto(i); // Obtener el punto actual.
+            Point p1 = getPunto(i - 1);
+            Point p2 = getPunto(i);
             if (p1 != null && p2 != null) {
                 g2d.drawLine(p1.x, p1.y, p2.x, p2.y);
             }
@@ -47,12 +38,11 @@ public class DibujoLibre extends Figura {
     }
 
     /**
-     * Añade un nuevo punto al dibujo a mano alzada.
      * @param puntoActual El punto actual a añadir.
      */
     @Override
     public void actualizar(Point puntoActual) {
-        puntos.add(puntoActual); // Añadir el punto actual a la lista de puntos.
+        puntos.add(puntoActual);
     }
 
     @Override
@@ -63,8 +53,8 @@ public class DibujoLibre extends Figura {
         data.setColorDePrimerPlano(this.colorDePrimerPlano);
         data.setColorDeRelleno(this.colorDeRelleno);
         data.setEstaRelleno(this.relleno);
-        data.setPuntosTrazo(new ArrayList<>(this.puntos)); // Clonar la lista para evitar modificaciones externas
-        data.setGrosor(this.grosor);  // Guardar el grosor
+        data.setPuntosTrazo(new ArrayList<>(this.puntos));
+        data.setGrosor(this.grosor);
         return data;
     }
 
@@ -74,16 +64,14 @@ public class DibujoLibre extends Figura {
             return false;
         }
 
-        final int TOLERANCIA = 5; // Define la cercanía para considerar que el punto "toca" la línea
+        final int TOLERANCIA = 5;
 
-        // Verificar si el punto está cerca de algún punto del trazo
         for (Point punto : puntos) {
             if (punto != null && punto.distance(p) <= TOLERANCIA) {
                 return true;
             }
         }
 
-        // Verificar si el punto está cerca de algún segmento de línea
         for (int i = 1; i < puntos.size(); i++) {
             Point p1 = getPunto(i - 1);
             Point p2 = getPunto(i);
@@ -95,18 +83,16 @@ public class DibujoLibre extends Figura {
         return false;
     }
 
-    // Método auxiliar para calcular la distancia de un punto a un segmento de línea
     private double distanciaPuntoALinea(Point p, Point p1, Point p2) {
         double dx = p2.x - p1.x;
         double dy = p2.y - p1.y;
 
         if (dx == 0 && dy == 0) {
-            // Es un punto, no un segmento
             return p1.distance(p);
         }
 
         double t = ((p.x - p1.x) * dx + (p.y - p1.y) * dy) / (dx * dx + dy * dy);
-        t = Math.max(0, Math.min(1, t)); // Limitar t al rango [0, 1]
+        t = Math.max(0, Math.min(1, t));
 
         Point closestPoint = new Point((int) (p1.x + t * dx), (int) (p1.y + t * dy));
         return p.distance(closestPoint);

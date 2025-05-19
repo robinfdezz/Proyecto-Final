@@ -1,6 +1,6 @@
 package paint202510;
 
-import figuras.*; // Asegúrate de importar todas las clases de figuras
+import figuras.*;
 import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.Graphics2D;
@@ -11,14 +11,11 @@ import java.io.File;
 import java.io.IOException;
 import javax.imageio.ImageIO;
 import javax.swing.*;
-
-// Importaciones necesarias para copiar y pegar
 import java.awt.Toolkit;
 import java.awt.datatransfer.Clipboard;
-//import java.awt.datatransfer.DataFlavor;
 import java.awt.datatransfer.Transferable;
 import java.awt.datatransfer.UnsupportedFlavorException;
-import java.awt.Point; // Necesario para ajustar la posición al pegar
+import java.awt.Point;
 
 
 /*

@@ -2,14 +2,9 @@ package figuras;
 
 import java.awt.*;
 
-/**
- * Representa una forma de óvalo (elipse).
- * Puede ser dibujado con un contorno y rellenado con un color separado.
- */
 public class Ovalo extends Figura {
 
     /**
-     * Constructor de un Óvalo con un punto inicial dado.
      * @param puntoInicial El punto inicial del óvalo.
      */
     public Ovalo(Point puntoInicial) {
@@ -17,7 +12,6 @@ public class Ovalo extends Figura {
     }
 
     /**
-     * Actualiza el punto final para determinar el tamaño y la posición del óvalo.
      * @param puntoActual El punto actual (típicamente la ubicación mientras se arrastra el ratón).
      */
     @Override
@@ -26,37 +20,31 @@ public class Ovalo extends Figura {
     }
 
     /**
-     * Dibuja el óvalo en el contexto gráfico dado.
-     * Dibuja un óvalo relleno si 'relleno' es true, y un contorno de óvalo.
      * @param g El objeto Graphics sobre el que dibujar.
      */
     @Override
     public void dibujar(Graphics g) {
-        //g.setColor(colorDePrimerPlano); // Establecer el color para el contorno.
-        //g2d.setStroke(new BasicStroke(this.grosor)); // Usar this.grosor
         Graphics2D g2 = (Graphics2D) g;
         g2.setColor(colorDePrimerPlano);
-        g2.setStroke(new BasicStroke(this.grosor)); // Establecer el grosor
+        g2.setStroke(new BasicStroke(this.grosor));
         
-        // Calcular las coordenadas de la esquina superior izquierda, el ancho y la altura del cuadro delimitador.
         int x = Math.min(getPunto(0).x, getPunto(1).x);
         int y = Math.min(getPunto(0).y, getPunto(1).y);
         int width = Math.abs(getPunto(1).x - getPunto(0).x);
         int height = Math.abs(getPunto(1).y - getPunto(0).y);
 
-        if (relleno) { // Verificar si el relleno está habilitado.
+        if (relleno) {
             if (colorDeRelleno != null) {
-                g2.setColor(colorDeRelleno); // Establecer el color de relleno si se especifica.
+                g2.setColor(colorDeRelleno);
             }
-            g2.fillOval(x, y, width, height); // Dibujar el óvalo relleno.
+            g2.fillOval(x, y, width, height);
 
-            // Dibujar el borde si el color de relleno es diferente al color de borde.
             if (colorDeRelleno != colorDePrimerPlano && colorDeRelleno != null) {
-                g2.setColor(colorDePrimerPlano); // Restablecer el color al color de borde.
-                g2.drawOval(x, y, width, height); // Dibujar el contorno del óvalo.
+                g2.setColor(colorDePrimerPlano);
+                g2.drawOval(x, y, width, height);
             }
         } else {
-            g2.drawOval(x, y, width, height); // Si no hay relleno, solo dibujar el contorno del óvalo.
+            g2.drawOval(x, y, width, height);
         }
     }
 
@@ -64,23 +52,20 @@ public class Ovalo extends Figura {
     public FiguraData getFiguraData() {
         FiguraData data = new FiguraData("Ovalo");
         data.setPuntoInicial(this.getPunto(0));
-        data.setPuntoFinal(this.getPunto(1)); // Para rectángulos, puntoInicial y puntoFinal definen el tamaño/posición
+        data.setPuntoFinal(this.getPunto(1));
         data.setColorDePrimerPlano(this.colorDePrimerPlano);
         data.setColorDeRelleno(this.colorDeRelleno);
         data.setEstaRelleno(this.relleno);
-        data.setGrosor(this.grosor);  // Guardar el grosor
-        // No tiene sentido para Rectangulo setear centro, puntosTrazo o tamanoBorrador
+        data.setGrosor(this.grosor);
         return data;
     }
 
-    // Implementación de contains para Rectángulo (más precisa)
     @Override
     public boolean contains(Point p) {
         int x = Math.min(getPunto(0).x, getPunto(1).x);
         int y = Math.min(getPunto(0).y, getPunto(1).y);
         int width = Math.abs(getPunto(1).x - getPunto(0).x);
         int height = Math.abs(getPunto(1).y - getPunto(0).y);
-        // Crear un rectángulo Java y verificar si contiene el punto
         return new java.awt.Rectangle(x, y, width, height).contains(p);
     }
 
